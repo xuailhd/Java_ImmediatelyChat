@@ -155,24 +155,23 @@ public class SendMsg implements ISendMsg {
 										CommonVariables.getMCSPort()), 5000);
 
 								ou = serivce.getOutputStream();
-								in = serivce.getInputStream();
-
 								jsonObject = new JSONObject();
 								jsonObject.put("ObjectID",
 										CommonVariables.getObjectID());
 								msg = "VerifyAccount" + jsonObject.toString();
-
+								Log.e("Test", "Send MCS message" + msg);
 								ou.write(msg.getBytes("UTF-8"));
 								ou.flush();
+								
+								in = serivce.getInputStream();
 								bff = new BufferedReader(new InputStreamReader(
-										in));
-
-								while ((line = bff.readLine()) != null) {
-									Intent intent = new Intent(); // Itent就是我们要发送的内容
-									intent.putExtra("MSG", "Success");
-									intent.setAction("LoginActivity"); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
-									packageContext.sendBroadcast(intent); // 发送广播
-								}
+										in,"UTF-8"));
+								line = bff.readLine();		
+								Log.e("Test", "Get MCS feedback:" + line);
+								Intent intent = new Intent(); // Itent就是我们要发送的内容
+								intent.putExtra("MSG", "Success");
+								intent.setAction("LoginActivity"); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
+								packageContext.sendBroadcast(intent); // 发送广播
 								serivce.close();
 							} catch (IOException ex) {
 								Log.e("Test", "Can not connect MCS:" + ex.getMessage());
@@ -192,13 +191,29 @@ public class SendMsg implements ISendMsg {
 
 					} else {
 						Log.e("Test", "Post failure:" + httpResponse.getStatusLine().getStatusCode()); 
+						Intent intent = new Intent(); // Itent就是我们要发送的内容
+						intent.putExtra("MSG", "Can not connect PS");
+						intent.setAction("LoginActivity"); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
+						packageContext.sendBroadcast(intent); // 发送广播
 					}
 				} catch (ClientProtocolException e) {
 					e.printStackTrace();
+					Intent intent = new Intent(); // Itent就是我们要发送的内容
+					intent.putExtra("MSG", "Can not connect PS");
+					intent.setAction("LoginActivity"); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
+					packageContext.sendBroadcast(intent); // 发送广播
 				} catch (IOException e) {
 					e.printStackTrace();
+					Intent intent = new Intent(); // Itent就是我们要发送的内容
+					intent.putExtra("MSG", "Can not connect PS");
+					intent.setAction("LoginActivity"); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
+					packageContext.sendBroadcast(intent); // 发送广播
 				} catch (Exception e) {
 					e.printStackTrace();
+					Intent intent = new Intent(); // Itent就是我们要发送的内容
+					intent.putExtra("MSG", "Can not connect PS");
+					intent.setAction("LoginActivity"); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
+					packageContext.sendBroadcast(intent); // 发送广播
 				}
 
 			}

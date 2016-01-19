@@ -115,7 +115,13 @@ public class ReciveMsgService extends Service {
 
 					BufferedReader bff = new BufferedReader(
 							new InputStreamReader(in));
-
+					
+					
+					
+					char[] buffer=new char[1024];
+					bff.read(buffer, 0, 1024);
+					
+					
 					String line = null;
 					// 获取客户端的信息
 					while ((line = bff.readLine()) != null) {
@@ -127,7 +133,7 @@ public class ReciveMsgService extends Service {
 					ou.close();
 					in.close();
 					sockettoServer.close();
-					Thread.sleep(100);
+					Thread.sleep(2000);
 				}
 				
 
