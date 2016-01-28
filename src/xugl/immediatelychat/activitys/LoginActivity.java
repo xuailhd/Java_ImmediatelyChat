@@ -192,7 +192,8 @@ public class LoginActivity extends Activity {
 		SharedPreferences settings = getSharedPreferences("PSConfig", Activity.MODE_PRIVATE);  
 		serverIP.setText(settings.getString("PSIP", ""));
 		serverPort.setText(settings.getString("PSPort", ""));
-		
+		account.setText(settings.getString("Account", ""));
+		password.setText(settings.getString("Password", ""));
 		
 		login.setOnClickListener(new OnClickListener(){
 
@@ -207,6 +208,8 @@ public class LoginActivity extends Activity {
 				SharedPreferences.Editor editor = settings.edit();  
 				editor.putString("PSIP", serverIP.getText().toString()); 
 				editor.putString("PSPort", serverPort.getText().toString()); 
+				editor.putString("Account", account.getText().toString()); 
+				editor.putString("Password", password.getText().toString()); 
 				editor.commit();  
 				
 				CommonVariables.setPSIP(serverIP.getText().toString());

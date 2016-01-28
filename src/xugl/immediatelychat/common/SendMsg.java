@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,11 +66,13 @@ public class SendMsg implements ISendMsg {
 	}
 
 	private String SetMSGBox(String msg) {
-		JSONObject msgObject=new JSONObject();
+		JSONObject msgObject = new JSONObject();
 		try {
-			msgObject.put(CommonFlag.getF_ObjectID(), CommonVariables.getObjectID());
+			msgObject.put(CommonFlag.getF_ObjectID(),
+					CommonVariables.getObjectID());
 			msgObject.put(CommonFlag.getF_MsgType(), 0);
-			msgObject.put(CommonFlag.getF_RecivedObjectID(), CommonVariables.getGroupID());
+			msgObject.put(CommonFlag.getF_RecivedObjectID(),
+					CommonVariables.getGroupID());
 			msgObject.put(CommonFlag.getF_SendType(), 1);
 			msgObject.put(CommonFlag.getF_Content(), msg);
 
@@ -81,7 +84,8 @@ public class SendMsg implements ISendMsg {
 	}
 
 	@Override
-	public void postAccount(final String account, final String password,final Context packageContext) {
+	public void postAccount(final String account, final String password,
+			final Context packageContext) {
 		// TODO Auto-generated method stub
 		new Thread(new Runnable() {
 
@@ -104,7 +108,6 @@ public class SendMsg implements ISendMsg {
 						/* 读 */
 						String strResult = EntityUtils.toString(httpResponse
 								.getEntity());
-
 						JSONObject psresultjsonObject = new JSONObject(
 								strResult);
 						CommonVariables.setMMSIP(psresultjsonObject
@@ -116,8 +119,10 @@ public class SendMsg implements ISendMsg {
 						CommonVariables.setAccount(account);
 						CommonVariables.setGroupID("Group1");
 
-						//connect MMS
+						// connect MMS
 						try {
+							char[] charbuffer = new char[1024];
+							int charcount;
 							Socket sockettoServer = new Socket();
 							sockettoServer.connect(
 									new InetSocketAddress(CommonVariables
@@ -137,18 +142,14 @@ public class SendMsg implements ISendMsg {
 							BufferedReader bff = new BufferedReader(
 									new InputStreamReader(in));
 
-							String line = null;
+							charcount=bff.read(charbuffer);
 							// 获取客户端的信息
-							while ((line = bff.readLine()) != null) {
-								UnServerBox(line);
-							}
+							UnServerBox(String.valueOf(charbuffer, 0, charcount));
 							ou.close();
 							in.close();
 							sockettoServer.close();
-
-							//  connect MCS
+							// connect MCS
 							try {
-								line = null;
 								Socket serivce = new Socket();
 								serivce.connect(new InetSocketAddress(
 										CommonVariables.getMCSIP(),
@@ -162,27 +163,33 @@ public class SendMsg implements ISendMsg {
 								Log.e("Test", "Send MCS message" + msg);
 								ou.write(msg.getBytes("UTF-8"));
 								ou.flush();
-								
+
 								in = serivce.getInputStream();
 								bff = new BufferedReader(new InputStreamReader(
-										in,"UTF-8"));
-								line = bff.readLine();		
-								Log.e("Test", "Get MCS feedback:" + line);
+										in, "UTF-8"));
+								
+								charcount = bff.read(charbuffer);
+								Log.e("Test", "get message count:" + charcount);
+								String.valueOf(charbuffer, 0, charcount);
+
 								Intent intent = new Intent(); // Itent就是我们要发送的内容
 								intent.putExtra("MSG", "Success");
 								intent.setAction("LoginActivity"); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
 								packageContext.sendBroadcast(intent); // 发送广播
 								serivce.close();
-							} catch (IOException ex) {
-								Log.e("Test", "Can not connect MCS:" + ex.getMessage());
+							} catch (Exception ex) {
+								Log.e("Test",
+										"Can not connect MCS:"
+												+ ex.getMessage());
 								Intent intent = new Intent(); // Itent就是我们要发送的内容
 								intent.putExtra("MSG", "Can not connect MCS");
 								intent.setAction("LoginActivity"); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
 								packageContext.sendBroadcast(intent); // 发送广播
 							}
 
-						} catch (IOException ex) {
-							Log.e("Test", "Can not connect MMS:" + ex.getMessage());
+						} catch (Exception ex) {
+							Log.e("Test",
+									"Can not connect MMS:" + ex.getMessage());
 							Intent intent = new Intent(); // Itent就是我们要发送的内容
 							intent.putExtra("MSG", "Can not connect MMS");
 							intent.setAction("LoginActivity"); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
@@ -190,25 +197,14 @@ public class SendMsg implements ISendMsg {
 						}
 
 					} else {
-						Log.e("Test", "Post failure:" + httpResponse.getStatusLine().getStatusCode()); 
+						Log.e("Test", "Post failure:"
+								+ httpResponse.getStatusLine().getStatusCode());
 						Intent intent = new Intent(); // Itent就是我们要发送的内容
 						intent.putExtra("MSG", "Can not connect PS");
 						intent.setAction("LoginActivity"); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
 						packageContext.sendBroadcast(intent); // 发送广播
 					}
-				} catch (ClientProtocolException e) {
-					e.printStackTrace();
-					Intent intent = new Intent(); // Itent就是我们要发送的内容
-					intent.putExtra("MSG", "Can not connect PS");
-					intent.setAction("LoginActivity"); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
-					packageContext.sendBroadcast(intent); // 发送广播
-				} catch (IOException e) {
-					e.printStackTrace();
-					Intent intent = new Intent(); // Itent就是我们要发送的内容
-					intent.putExtra("MSG", "Can not connect PS");
-					intent.setAction("LoginActivity"); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
-					packageContext.sendBroadcast(intent); // 发送广播
-				} catch (Exception e) {
+				}  catch (Exception e) {
 					e.printStackTrace();
 					Intent intent = new Intent(); // Itent就是我们要发送的内容
 					intent.putExtra("MSG", "Can not connect PS");
