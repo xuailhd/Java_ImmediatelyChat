@@ -1,10 +1,5 @@
 package xugl.immediatelychat.activitys;
 
-
-
-
-import java.util.List;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,7 +16,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -73,51 +67,6 @@ public class LoginActivity extends Activity {
 
     }
 	
-	
-//	private String GetHostIP()
-//	{
-//		String ip="1";
-//		//获取wifi服务  
-//        WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);  
-//        //判断wifi是否开启  
-//        if (wifiManager.isWifiEnabled()) {  
-//        	WifiInfo wifiInfo = wifiManager.getConnectionInfo();       
-//            int ipAddress = wifiInfo.getIpAddress();   
-//            ip = intToIp(ipAddress);   
-//        }  
-//        else
-//        {
-//        	try
-//        	{
-//	        	for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();)  
-//	            {  
-//	               NetworkInterface intf = en.nextElement();  
-//	               for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();)  
-//	               {  
-//	                   InetAddress inetAddress = enumIpAddr.nextElement();  
-//	                   if (!inetAddress.isLoopbackAddress())  
-//	                   {  
-//	                       return inetAddress.getHostAddress().toString();  
-//	                   }  
-//	               }  
-//	           }  
-//        	}
-//        	catch(SocketException ex)
-//        	{
-//        		
-//        	}
-//        }
-//         
-//        return ip;
-//	}
-//	
-//	private String intToIp(int i) {       
-//        
-//        return (i & 0xFF ) + "." +       
-//      ((i >> 8 ) & 0xFF) + "." +       
-//      ((i >> 16 ) & 0xFF) + "." +       
-//      ( i >> 24 & 0xFF) ;  
-//   } 
 	
 	@Override
 	protected void onDestroy() {

@@ -1,5 +1,7 @@
 package xugl.immediatelychat.common;
 
+import java.util.Date;
+
 public class CommonVariables {
 	private static String PSIP;
 	private static int PSPort;
@@ -74,5 +76,16 @@ public class CommonVariables {
 	public static void setGroupID(String groupID) {
 		CommonVariables.groupID = groupID;
 	}
+	
+	private static Date latestTime;
+
+	public static Date getLatestTime() {
+		return latestTime;
+	}
+	public static void setLatestTime(Date latestTime) {
+		CommonVariables.latestTime = latestTime;
+	}
+	
+	
 	
 }

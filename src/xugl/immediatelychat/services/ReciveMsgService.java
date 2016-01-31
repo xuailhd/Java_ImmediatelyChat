@@ -96,44 +96,62 @@ public class ReciveMsgService extends Service {
 
 			try {
 				Log.e("Test", "Begin Get Mssage from MCS");
-
+				char[] charbuffer = new char[1024];
+				int charcount=0;
+				Socket sockettoServer=null;
+				OutputStream ou=null;
+				InputStream in=null;
+				JSONObject jsonObject=null;
+				Intent intent=null;
+				String message=null;
+				String reciverid=null;
+				
 				while (isGoonRunning) {
-					Socket sockettoServer = new Socket();
+					sockettoServer = new Socket();
 					sockettoServer.connect(
 							new InetSocketAddress(CommonVariables.getMCSIP(),
 									CommonVariables.getMCSPort()), 5000);
 
-					OutputStream ou = sockettoServer.getOutputStream();
-					InputStream in = sockettoServer.getInputStream();
+					ou = sockettoServer.getOutputStream();
+					in = sockettoServer.getInputStream();
 
-					JSONObject jsonObject = new JSONObject();
-					jsonObject.put("ObjectID", CommonVariables.getObjectID());
-					String msg = "VerifyGetMSG" + jsonObject.toString();
+					jsonObject = new JSONObject();
+					jsonObject.put(CommonFlag.getF_ObjectID(), CommonVariables.getObjectID());
+					
+					String[] groupids={CommonVariables.getGroupID()};
+					jsonObject.put(CommonFlag.getF_GroupIDs(), groupids);
+					jsonObject.put(CommonFlag.getF_LatestTime(), CommonVariables.getLatestTime());
+					
+					String msg = CommonFlag.getF_MCSVerifyUAGetMSG() + jsonObject.toString();
 
 					ou.write(msg.getBytes("UTF-8"));
 					ou.flush();
 
 					BufferedReader bff = new BufferedReader(
-							new InputStreamReader(in));
-					
-					
+							new InputStreamReader(in,"UTF-8"));
+					charcount=bff.read(charbuffer);
+					while(charcount>0)
+					{
+						intent = new Intent(); // Itent就是我们要发送的内容
+						
+						message=String.valueOf(charbuffer, 0, charcount);
+						
+						jsonObject=new JSONObject(message);
+						reciverid=jsonObject.getString(CommonFlag.getF_GroupID());
+						
+						intent.putExtra("MSG", message);
+						intent.setAction(reciverid); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
+						sendBroadcast(intent); // 发送广播
+						
+						charcount=bff.read(charbuffer);
+					}
 					
 					char[] buffer=new char[1024];
 					bff.read(buffer, 0, 1024);
-					
-					
-					String line = null;
-					// 获取客户端的信息
-					while ((line = bff.readLine()) != null) {
-						if( !line.equals("No"))
-						{
-							new HandlerMsg(line).start();
-						}
-					}
 					ou.close();
 					in.close();
 					sockettoServer.close();
-					Thread.sleep(2000);
+					Thread.sleep(500);
 				}
 				
 

@@ -70,17 +70,17 @@ public class SendMsg implements ISendMsg {
 		try {
 			msgObject.put(CommonFlag.getF_ObjectID(),
 					CommonVariables.getObjectID());
-			msgObject.put(CommonFlag.getF_MsgType(), 0);
-			msgObject.put(CommonFlag.getF_RecivedObjectID(),
-					CommonVariables.getGroupID());
-			msgObject.put(CommonFlag.getF_SendType(), 1);
+			msgObject.put(CommonFlag.getF_Account(), 
+					CommonVariables.getAccount());
 			msgObject.put(CommonFlag.getF_Content(), msg);
-
+			msgObject.put(CommonFlag.getF_RecivedGroupID(), CommonVariables.getGroupID());
+			msgObject.put(CommonFlag.getF_MsgType(), 0);
+			msgObject.put(CommonFlag.getF_SendType(), 1);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return "VerifyMSG" + msgObject.toString();
+		return CommonFlag.getF_MCSVerifyUAMSG() + msgObject.toString();
 	}
 
 	@Override
@@ -133,9 +133,9 @@ public class SendMsg implements ISendMsg {
 							InputStream in = sockettoServer.getInputStream();
 
 							JSONObject jsonObject = new JSONObject();
-							jsonObject.put("ObjectID",
+							jsonObject.put(CommonFlag.getF_ObjectID(),
 									CommonVariables.getObjectID());
-							String msg = "Verify" + jsonObject.toString();
+							String msg = CommonFlag.getF_MMSVerifyUA() + jsonObject.toString();
 							ou.write(msg.getBytes("UTF-8"));
 							ou.flush();
 
@@ -157,9 +157,9 @@ public class SendMsg implements ISendMsg {
 
 								ou = serivce.getOutputStream();
 								jsonObject = new JSONObject();
-								jsonObject.put("ObjectID",
+								jsonObject.put(CommonFlag.getF_ObjectID(),
 										CommonVariables.getObjectID());
-								msg = "VerifyAccount" + jsonObject.toString();
+								msg = CommonFlag.getF_MCSVerifyUA() + jsonObject.toString();
 								Log.e("Test", "Send MCS message" + msg);
 								ou.write(msg.getBytes("UTF-8"));
 								ou.flush();
