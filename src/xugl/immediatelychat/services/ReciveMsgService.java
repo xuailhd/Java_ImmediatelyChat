@@ -11,8 +11,12 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Random;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -94,19 +98,24 @@ public class ReciveMsgService extends Service {
 		public void run() {
 			// TODO Auto-generated method stub
 
-			try {
-				Log.e("Test", "Begin Get Mssage from MCS");
-				char[] charbuffer = new char[1024];
-				int charcount=0;
-				Socket sockettoServer=null;
-				OutputStream ou=null;
-				InputStream in=null;
-				JSONObject jsonObject=null;
-				Intent intent=null;
-				String message=null;
-				String reciverid=null;
-				
-				while (isGoonRunning) {
+			Log.e("Test", "Begin Get Mssage from MCS");
+			char[] charbuffer = new char[1024];
+			int charcount = 0;
+			Socket sockettoServer = null;
+			OutputStream ou = null;
+			InputStream in = null;
+			JSONObject jsonObject = null;
+			JSONArray jsonArray = null;
+			Intent intent = null;
+			String message = null;
+			String reciverid = null;
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+			int i = 0;
+			
+			while (isGoonRunning) {
+				try {
+					i++;
+					Log.e(TAG, "Begin the " + i + "st get");
 					sockettoServer = new Socket();
 					sockettoServer.connect(
 							new InetSocketAddress(CommonVariables.getMCSIP(),
@@ -116,77 +125,74 @@ public class ReciveMsgService extends Service {
 					in = sockettoServer.getInputStream();
 
 					jsonObject = new JSONObject();
-					jsonObject.put(CommonFlag.getF_ObjectID(), CommonVariables.getObjectID());
-					
-					String[] groupids={CommonVariables.getGroupID()};
-					jsonObject.put(CommonFlag.getF_GroupIDs(), groupids);
-					jsonObject.put(CommonFlag.getF_LatestTime(), CommonVariables.getLatestTime());
-					
-					String msg = CommonFlag.getF_MCSVerifyUAGetMSG() + jsonObject.toString();
+					jsonObject.put(CommonFlag.getF_ObjectID(),
+							CommonVariables.getObjectID());
+					jsonArray = new JSONArray();
+					jsonArray.put(CommonVariables.getGroupID());
+					jsonObject.put(CommonFlag.getF_GroupIDs(), jsonArray);
+					jsonObject.put(CommonFlag.getF_LatestTime(),
+							df.format(CommonVariables.getLatestTime()));
+
+					String msg = CommonFlag.getF_MCSVerifyUAGetMSG()
+							+ jsonObject.toString();
 
 					ou.write(msg.getBytes("UTF-8"));
 					ou.flush();
 
 					BufferedReader bff = new BufferedReader(
-							new InputStreamReader(in,"UTF-8"));
-					charcount=bff.read(charbuffer);
-					while(charcount>0)
-					{
+							new InputStreamReader(in, "UTF-8"));
+					charcount = bff.read(charbuffer);
+//					Log.e("Test", "Get Message charcount:" + charcount);
+					while (charcount > 0) {
 						intent = new Intent(); // Itent就是我们要发送的内容
-						
-						message=String.valueOf(charbuffer, 0, charcount);
-						
-						jsonObject=new JSONObject(message);
-						reciverid=jsonObject.getString(CommonFlag.getF_GroupID());
-						
+
+						message = String.valueOf(charbuffer, 0, charcount);
+
+						jsonObject = new JSONObject(message);
+						reciverid = jsonObject.getString(CommonFlag
+								.getF_GroupID());
+
+						if (df.parse(jsonObject.getString("SendTime"))
+								.getTime() > CommonVariables.getLatestTime()
+								.getTime()) {
+							CommonVariables.setLatestTime(df.parse(jsonObject
+									.getString("SendTime")));
+						}
+
 						intent.putExtra("MSG", message);
 						intent.setAction(reciverid); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
 						sendBroadcast(intent); // 发送广播
-						
-						charcount=bff.read(charbuffer);
+
+						charcount = bff.read(charbuffer);
 					}
-					
-					char[] buffer=new char[1024];
-					bff.read(buffer, 0, 1024);
+
 					ou.close();
 					in.close();
 					sockettoServer.close();
-					Thread.sleep(500);
+					sockettoServer=null;
+					Thread.sleep(1000);
+				} catch (Exception ex) {
+					Log.e("Test", "Get Message failure:" + ex.getMessage());
+
 				}
-				
-
-			} catch (Exception ex) {
-				Log.e("Test", "Get Message failure:" + ex.getMessage());
-
 			}
 
+			stopSelf();
 		}
 	}
-	
-	
-	private class HandlerMsg extends Thread
+
+	public class SendMsgThread extends Thread
 	{
-		private String msg;
-		public HandlerMsg(String _msg)
-		{
-			this.msg=_msg;
-		}
+		
+		
 		
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			
-			try {
-				JSONObject msgJSONObject=new JSONObject(msg);
-				
-				
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			
+			super.run();
 		}
 		
 	}
+	
+	
 }

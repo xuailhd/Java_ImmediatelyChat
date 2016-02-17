@@ -1,13 +1,19 @@
 package xugl.immediatelychat.activitys;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import xugl.immediatelychat.R;
+import xugl.immediatelychat.common.CommonVariables;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -37,7 +43,30 @@ public class WelcomeActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_welcome);
-
+		
+		
+		
+		
+		try {
+			//读取本地配置文件
+			SharedPreferences settings = getSharedPreferences("PSConfig", Activity.MODE_PRIVATE);  
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");  
+			if(settings.getString("LatestTime", "").length()<=0)
+			{
+				Date dt=new Date();
+				SharedPreferences.Editor editor = settings.edit();  
+				editor.putString("LatestTime",sdf.format(dt)); 
+				editor.commit();
+			}
+			
+			CommonVariables.setLatestTime(sdf.parse(settings.getString("LatestTime", new Date().toString())));
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		
+		
 		new Thread(){
 
 			@Override
