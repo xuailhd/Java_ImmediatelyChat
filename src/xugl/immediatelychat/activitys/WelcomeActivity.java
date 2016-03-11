@@ -17,6 +17,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 public class WelcomeActivity extends Activity {
 
@@ -50,16 +51,25 @@ public class WelcomeActivity extends Activity {
 		try {
 			//读取本地配置文件
 			SharedPreferences settings = getSharedPreferences("PSConfig", Activity.MODE_PRIVATE);  
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");  
-			if(settings.getString("LatestTime", "").length()<=0)
-			{
-				Date dt=new Date();
+			SimpleDateFormat sdf = new SimpleDateFormat(CommonVariables.getDateFormat());  
+//			if(settings.getString("LatestTime", "").length()<=0)
+//			{
 				SharedPreferences.Editor editor = settings.edit();  
-				editor.putString("LatestTime",sdf.format(dt)); 
+				editor.putString("LatestTime","1900-01-01 00:00:00.000"); 
 				editor.commit();
-			}
+//			}
 			
 			CommonVariables.setLatestTime(sdf.parse(settings.getString("LatestTime", new Date().toString())));
+
+//			if(settings.getString("UpdateTime", "").length()<=0)
+//			{
+//				SharedPreferences.Editor editor = settings.edit();  
+				editor.putString("UpdateTime","1900-01-01 00:00:00.000"); 
+				editor.commit();
+//			}
+			
+			CommonVariables.setUpdateTime(sdf.parse(settings.getString("UpdateTime", new Date().toString())));
+			
 		} catch (ParseException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

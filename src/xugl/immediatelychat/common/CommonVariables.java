@@ -5,6 +5,12 @@ import java.util.Date;
 import org.json.JSONArray;
 
 public class CommonVariables {
+	private static String dateFormat="yyyy-MM-dd HH:mm:ss.SSS";
+	
+	public static String getDateFormat() {
+		return dateFormat;
+	}
+
 	private static String PSIP;
 	private static int PSPort;
 	private static String MMSIP;
@@ -88,6 +94,15 @@ public class CommonVariables {
 		CommonVariables.latestTime = latestTime;
 	}
 	
+	private static Date updateTime;
+	
+	public static Date getUpdateTime() {
+		return updateTime;
+	}
+	public static void setUpdateTime(Date updateTime) {
+		CommonVariables.updateTime = updateTime;
+	}
+
 	private static JSONArray jsonMsgArray;
 
 	public static JSONArray getJsonMsgArray() {

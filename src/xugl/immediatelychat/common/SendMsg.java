@@ -111,6 +111,7 @@ public class SendMsg implements ISendMsg {
 
 	private Boolean ConnectPS(String account, String password,
 			Context packageContext) {
+		Intent intent;
 		HttpGet httpRequest = new HttpGet("http://" + CommonVariables.getPSIP()
 				+ ":" + CommonVariables.getPSPort()
 				+ "/ContactPerson/LoginForAPI?" + CommonFlag.getF_Account()
@@ -126,18 +127,39 @@ public class SendMsg implements ISendMsg {
 				String strResult = EntityUtils.toString(httpResponse
 						.getEntity());
 				JSONObject psresultjsonObject = new JSONObject(strResult);
+				
+				int status=psresultjsonObject.getInt("Status");
+				Log.e("Test", "PS return:"
+						+ strResult);
+				if(status==1)
+				{
+					intent = new Intent(); // Itent就是我们要发送的内容
+					intent.putExtra("MSG", "Account or Password incorrect");
+					intent.setAction("LoginActivity"); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
+					packageContext.sendBroadcast(intent); // 发送广播
+					return false;
+				}
+				
+				if(status==2)
+				{
+					intent = new Intent(); // Itent就是我们要发送的内容
+					intent.putExtra("MSG", "MMS server have not start");
+					intent.setAction("LoginActivity"); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
+					packageContext.sendBroadcast(intent); // 发送广播
+					return false;
+				}
+				
 				CommonVariables.setMMSIP(psresultjsonObject.getString("IP"));
 				CommonVariables.setMMSPort(psresultjsonObject.getInt("Port"));
 				CommonVariables.setObjectID(psresultjsonObject
 						.getString("ObjectID"));
 				CommonVariables.setAccount(account);
-				CommonVariables.setGroupID("Group1");
 				return true;
 
 			} else {
 				Log.e("Test", "Post failure:"
 						+ httpResponse.getStatusLine().getStatusCode());
-				Intent intent = new Intent(); // Itent就是我们要发送的内容
+				intent = new Intent(); // Itent就是我们要发送的内容
 				intent.putExtra("MSG", "Can not connect PS");
 				intent.setAction("LoginActivity"); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
 				packageContext.sendBroadcast(intent); // 发送广播
@@ -145,7 +167,7 @@ public class SendMsg implements ISendMsg {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			Intent intent = new Intent(); // Itent就是我们要发送的内容
+			intent = new Intent(); // Itent就是我们要发送的内容
 			intent.putExtra("MSG", "Can not connect PS");
 			intent.setAction("LoginActivity"); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
 			packageContext.sendBroadcast(intent); // 发送广播
@@ -156,7 +178,7 @@ public class SendMsg implements ISendMsg {
 	private boolean ConnectMMS(Context packageContext) {
 		try {
 			char[] charbuffer = new char[1024];
-			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+			DateFormat df = new SimpleDateFormat(CommonVariables.getDateFormat());
 			int charcount;
 			Socket sockettoServer = new Socket();
 			sockettoServer.connect(
@@ -165,12 +187,14 @@ public class SendMsg implements ISendMsg {
 
 			OutputStream ou = sockettoServer.getOutputStream();
 			InputStream in = sockettoServer.getInputStream();
-
+			
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put(CommonFlag.getF_ObjectID(),
 					CommonVariables.getObjectID());
 			jsonObject.put(CommonFlag.getF_LatestTime(),
 					df.format(CommonVariables.getLatestTime()));
+			jsonObject.put(CommonFlag.getF_UpdateTime(),
+					df.format(CommonVariables.getUpdateTime()));
 			String msg = CommonFlag.getF_MMSVerifyUA() + jsonObject.toString();
 			ou.write(msg.getBytes("UTF-8"));
 			ou.flush();
@@ -197,30 +221,56 @@ public class SendMsg implements ISendMsg {
 	private void ConnectMCS(Context packageContext) {
 		try {
 			char[] charbuffer = new char[1024];
+			DateFormat df = new SimpleDateFormat(CommonVariables.getDateFormat());
 			int charcount;
 			Socket serivce = new Socket();
 			serivce.connect(new InetSocketAddress(CommonVariables.getMCSIP(),
 					CommonVariables.getMCSPort()), 5000);
 
 			OutputStream ou = serivce.getOutputStream();
-			JSONObject jsonObject = new JSONObject();
-			jsonObject.put(CommonFlag.getF_ObjectID(),
-					CommonVariables.getObjectID());
-			String msg = CommonFlag.getF_MCSVerifyUA() + jsonObject.toString();
-			ou.write(msg.getBytes("UTF-8"));
-			ou.flush();
-
 			InputStream in = serivce.getInputStream();
 			BufferedReader bff = new BufferedReader(new InputStreamReader(in,
 					"UTF-8"));
-
-			charcount = bff.read(charbuffer);
-			String.valueOf(charbuffer, 0, charcount);
-
-			Intent intent = new Intent(); // Itent就是我们要发送的内容
-			intent.putExtra("MSG", "Success");
-			intent.setAction("LoginActivity"); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
-			packageContext.sendBroadcast(intent); // 发送广播
+			
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put(CommonFlag.getF_ObjectID(),
+					CommonVariables.getObjectID());
+			jsonObject.put(CommonFlag.getF_UpdateTime(),
+					df.format(CommonVariables.getUpdateTime()));
+			String msg = CommonFlag.getF_MCSVerifyUA() + jsonObject.toString();
+			
+			String mcsRereturn=null;
+			int retrytimes=3;
+			while(retrytimes>0)
+			{
+				ou.write(msg.getBytes("UTF-8"));
+				ou.flush();
+				charcount = bff.read(charbuffer);
+				mcsRereturn= String.valueOf(charbuffer, 0, charcount);
+				Log.e("Test", "MCS Return:" + mcsRereturn);
+				if(mcsRereturn.equalsIgnoreCase("ok"))
+				{
+					Intent intent = new Intent(); // Itent就是我们要发送的内容
+					intent.putExtra("MSG", "Success");
+					intent.setAction("LoginActivity"); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
+					packageContext.sendBroadcast(intent); // 发送广播
+					break;
+				}
+				else if(mcsRereturn.equalsIgnoreCase("wait"))
+				{
+					retrytimes--;
+					Thread.sleep(500);
+					continue;
+				}
+				else
+				{
+					Intent intent = new Intent(); // Itent就是我们要发送的内容
+					intent.putExtra("MSG", "Can not connect MCS");
+					intent.setAction("LoginActivity"); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
+					packageContext.sendBroadcast(intent); // 发送广播
+					break;
+				}
+			}
 			serivce.close();
 		} catch (Exception ex) {
 			Log.e("Test", "Can not connect MCS:" + ex.getMessage());
@@ -233,10 +283,11 @@ public class SendMsg implements ISendMsg {
 
 	private void UnServerBox(String serverMsg) {
 		try {
+			Log.e("Test", "MMS Return:" + serverMsg);
 			JSONObject jsonObject = new JSONObject(serverMsg);
 			CommonVariables.setMCSIP(jsonObject.getString("MCS_IP"));
 			CommonVariables.setMCSPort(jsonObject.getInt("MCS_Port"));
-			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
+			DateFormat df = new SimpleDateFormat(CommonVariables.getDateFormat());
 			CommonVariables.setLatestTime(df.parse(jsonObject
 					.getString("LatestTime")));
 		} catch (Exception e) {

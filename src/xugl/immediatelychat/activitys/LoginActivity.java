@@ -44,7 +44,7 @@ public class LoginActivity extends Activity {
             if(message.equals("Success"))
             {
             	
-            	startService(new Intent().setClass(LoginActivity.this, ReciveMsgService.class));
+            	//startService(new Intent().setClass(LoginActivity.this, ReciveMsgService.class));
             	
             	Intent intent2 = new Intent();
             	intent2.setClass(LoginActivity.this, MainActivity.class);

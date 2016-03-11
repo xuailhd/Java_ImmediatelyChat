@@ -15,6 +15,7 @@ public class CommonFlag {
     
     private static String f_GroupIDs="GroupIDs";
     private static String f_LatestTime="LatestTime";
+    private static String f_UpdateTime="UpdateTime";
     private static String f_GroupID="GroupID";
 
 	public static String getF_IP() {
@@ -72,13 +73,17 @@ public class CommonFlag {
 	public static String getF_LatestTime() {
 		return f_LatestTime;
 	}
+	
+	public static String getF_UpdateTime() {
+		return f_UpdateTime;
+	}
 
 	public static String getF_GroupID() {
 		return f_GroupID;
 	}
 
 
-	private static String f_MMSVerifyUA="Verify";
+	private static String f_MMSVerifyUA="VerifyUA";
 	private static String f_MCSVerifyUA="VerifyAccount";
 	private static String f_MCSVerifyUAMSG = "VerifyMSG";
     private static String f_MCSVerifyUAGetMSG = "VerifyGetMSG";
