@@ -84,6 +84,7 @@ public class CommonFlag {
 
 
 	private static String f_MMSVerifyUA="VerifyUA";
+	private static String f_MMSVerifyUAGetUAInfo = "MMSVerifyUAGetUAInfo";
 	private static String f_MCSVerifyUA="VerifyAccount";
 	private static String f_MCSVerifyUAMSG = "VerifyMSG";
     private static String f_MCSVerifyUAGetMSG = "VerifyGetMSG";
@@ -93,6 +94,10 @@ public class CommonFlag {
 		return f_MMSVerifyUA;
 	}
 
+	public static String getF_MMSVerifyUAGetUAInfo() {
+		return f_MMSVerifyUAGetUAInfo;
+	}
+	
 	public static String getF_MCSVerifyUA() {
 		return f_MCSVerifyUA;
 	}
@@ -108,6 +113,8 @@ public class CommonFlag {
 	public static String getF_MCSReciveUAMSGFB() {
 		return f_MCSReciveUAMSGFB;
 	}
+	
+	
     
 
 }

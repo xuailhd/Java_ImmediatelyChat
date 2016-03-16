@@ -44,39 +44,20 @@ public class WelcomeActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_welcome);
-		
-		
-		
-		
-		try {
-			//读取本地配置文件
-			SharedPreferences settings = getSharedPreferences("PSConfig", Activity.MODE_PRIVATE);  
-			SimpleDateFormat sdf = new SimpleDateFormat(CommonVariables.getDateFormat());  
-//			if(settings.getString("LatestTime", "").length()<=0)
-//			{
-				SharedPreferences.Editor editor = settings.edit();  
-				editor.putString("LatestTime","1900-01-01 00:00:00.000"); 
-				editor.commit();
-//			}
-			
-			CommonVariables.setLatestTime(sdf.parse(settings.getString("LatestTime", new Date().toString())));
 
-//			if(settings.getString("UpdateTime", "").length()<=0)
-//			{
-//				SharedPreferences.Editor editor = settings.edit();  
-				editor.putString("UpdateTime","1900-01-01 00:00:00.000"); 
-				editor.commit();
-//			}
-			
-			CommonVariables.setUpdateTime(sdf.parse(settings.getString("UpdateTime", new Date().toString())));
-			
-		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		if(CommonVariables.getLocalDataManager().GetData("LatestTime", this).length()<=0)
+		{
+			CommonVariables.getLocalDataManager().SaveData("LatestTime", CommonVariables.getMinDate(), this);
 		}
 		
+		if(CommonVariables.getLocalDataManager().GetData("UpdateTime", this).length()<=0)
+		{
+			CommonVariables.getLocalDataManager().SaveData("UpdateTime", CommonVariables.getMinDate(), this);
+		}
 		
-		
+		CommonVariables.setLatestTime(CommonVariables.getLocalDataManager().GetData("LatestTime", this));
+		CommonVariables.setUpdateTime(CommonVariables.getLocalDataManager().GetData("UpdateTime", this));
+
 		new Thread(){
 
 			@Override

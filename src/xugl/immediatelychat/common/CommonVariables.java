@@ -1,7 +1,5 @@
 package xugl.immediatelychat.common;
 
-import java.util.Date;
-
 import org.json.JSONArray;
 
 public class CommonVariables {
@@ -10,7 +8,22 @@ public class CommonVariables {
 	public static String getDateFormat() {
 		return dateFormat;
 	}
+	
+	private static String minDate="1900-01-01 00:00:00.000";
 
+	public static String getMinDate() {
+		return minDate;
+	}
+
+	private static ISaveLocalData saveLocalDataManager;
+	public static ISaveLocalData getLocalDataManager() {
+		if(saveLocalDataManager==null)
+		{
+			saveLocalDataManager=new SaveLocalData();
+		}
+		return saveLocalDataManager;
+	}
+	
 	private static String PSIP;
 	private static int PSPort;
 	private static String MMSIP;
@@ -85,21 +98,21 @@ public class CommonVariables {
 		CommonVariables.groupID = groupID;
 	}
 	
-	private static Date latestTime;
+	private static String latestTime;
 
-	public static Date getLatestTime() {
+	public static String getLatestTime() {
 		return latestTime;
 	}
-	public static void setLatestTime(Date latestTime) {
+	public static void setLatestTime(String latestTime) {
 		CommonVariables.latestTime = latestTime;
 	}
 	
-	private static Date updateTime;
+	private static String updateTime;
 	
-	public static Date getUpdateTime() {
+	public static String getUpdateTime() {
 		return updateTime;
 	}
-	public static void setUpdateTime(Date updateTime) {
+	public static void setUpdateTime(String updateTime) {
 		CommonVariables.updateTime = updateTime;
 	}
 
@@ -112,5 +125,5 @@ public class CommonVariables {
 		}
 		return jsonMsgArray;
 	}
-	
+
 }

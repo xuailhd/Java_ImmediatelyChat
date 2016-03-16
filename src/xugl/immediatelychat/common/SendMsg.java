@@ -178,7 +178,7 @@ public class SendMsg implements ISendMsg {
 	private boolean ConnectMMS(Context packageContext) {
 		try {
 			char[] charbuffer = new char[1024];
-			DateFormat df = new SimpleDateFormat(CommonVariables.getDateFormat());
+			String tempStr;
 			int charcount;
 			Socket sockettoServer = new Socket();
 			sockettoServer.connect(
@@ -191,10 +191,8 @@ public class SendMsg implements ISendMsg {
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put(CommonFlag.getF_ObjectID(),
 					CommonVariables.getObjectID());
-			jsonObject.put(CommonFlag.getF_LatestTime(),
-					df.format(CommonVariables.getLatestTime()));
-			jsonObject.put(CommonFlag.getF_UpdateTime(),
-					df.format(CommonVariables.getUpdateTime()));
+			jsonObject.put(CommonFlag.getF_LatestTime(),CommonVariables.getLatestTime());
+			jsonObject.put(CommonFlag.getF_UpdateTime(),CommonVariables.getUpdateTime());
 			String msg = CommonFlag.getF_MMSVerifyUA() + jsonObject.toString();
 			ou.write(msg.getBytes("UTF-8"));
 			ou.flush();
@@ -203,7 +201,35 @@ public class SendMsg implements ISendMsg {
 
 			charcount = bff.read(charbuffer);
 			// 获取客户端的信息
-			UnServerBox(String.valueOf(charbuffer, 0, charcount));
+			msg=String.valueOf(charbuffer, 0, charcount);
+			jsonObject = new JSONObject(msg);
+			CommonVariables.setMCSIP(jsonObject.getString("MCS_IP"));
+			CommonVariables.setMCSPort(jsonObject.getInt("MCS_Port"));
+			
+			String mmsUpdateTime= jsonObject
+					.getString("UpdateTime");
+			
+			if(mmsUpdateTime.compareTo(CommonFlag.getF_UpdateTime())>0)
+			{
+
+				jsonObject = new JSONObject();
+				jsonObject.put(CommonFlag.getF_ObjectID(),
+						CommonVariables.getObjectID());
+				jsonObject.put(CommonFlag.getF_UpdateTime(),CommonVariables.getUpdateTime());
+				msg=CommonFlag.getF_MMSVerifyUAGetUAInfo() + jsonObject.toString();
+				ou.write(msg.getBytes("UTF-8"));
+				ou.flush();
+				charcount = bff.read(charbuffer);
+				while(charcount>0)
+				{
+					msg=String.valueOf(charbuffer, 0, charcount);
+					jsonObject = new JSONObject(msg);
+				}
+			}
+			
+			CommonVariables.setLatestTime(df.parse(jsonObject
+					.getString("LatestTime")));
+			
 			ou.close();
 			in.close();
 			sockettoServer.close();
