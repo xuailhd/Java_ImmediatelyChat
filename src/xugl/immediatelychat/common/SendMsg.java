@@ -28,6 +28,8 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import xu.immediatelychat.contactdata.ContactDataOperate;
+import xu.immediatelychat.contactdata.IContactDataOperate;
 import xugl.immediatelychat.activitys.LoginActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -151,8 +153,7 @@ public class SendMsg implements ISendMsg {
 				
 				CommonVariables.setMMSIP(psresultjsonObject.getString("IP"));
 				CommonVariables.setMMSPort(psresultjsonObject.getInt("Port"));
-				CommonVariables.setObjectID(psresultjsonObject
-						.getString("ObjectID"));
+				CommonVariables.setObjectID(psresultjsonObject.getString("ObjectID"));
 				CommonVariables.setAccount(account);
 				return true;
 
@@ -177,6 +178,7 @@ public class SendMsg implements ISendMsg {
 
 	private boolean ConnectMMS(Context packageContext) {
 		try {
+			IContactDataOperate contactDataOperate=null;
 			char[] charbuffer = new char[1024];
 			String tempStr;
 			int charcount;
@@ -189,8 +191,7 @@ public class SendMsg implements ISendMsg {
 			InputStream in = sockettoServer.getInputStream();
 			
 			JSONObject jsonObject = new JSONObject();
-			jsonObject.put(CommonFlag.getF_ObjectID(),
-					CommonVariables.getObjectID());
+			jsonObject.put(CommonFlag.getF_ObjectID(), CommonVariables.getObjectID());
 			jsonObject.put(CommonFlag.getF_LatestTime(),CommonVariables.getLatestTime());
 			jsonObject.put(CommonFlag.getF_UpdateTime(),CommonVariables.getUpdateTime());
 			String msg = CommonFlag.getF_MMSVerifyUA() + jsonObject.toString();
@@ -211,10 +212,10 @@ public class SendMsg implements ISendMsg {
 			
 			if(mmsUpdateTime.compareTo(CommonFlag.getF_UpdateTime())>0)
 			{
-
+				contactDataOperate=new ContactDataOperate();
+				
 				jsonObject = new JSONObject();
-				jsonObject.put(CommonFlag.getF_ObjectID(),
-						CommonVariables.getObjectID());
+				jsonObject.put(CommonFlag.getF_ObjectID(), CommonVariables.getObjectID());
 				jsonObject.put(CommonFlag.getF_UpdateTime(),CommonVariables.getUpdateTime());
 				msg=CommonFlag.getF_MMSVerifyUAGetUAInfo() + jsonObject.toString();
 				ou.write(msg.getBytes("UTF-8"));
@@ -224,12 +225,12 @@ public class SendMsg implements ISendMsg {
 				{
 					msg=String.valueOf(charbuffer, 0, charcount);
 					jsonObject = new JSONObject(msg);
+					ou.write((CommonFlag.getF_MMSVerifyFBUAGetUAInfo()+
+							contactDataOperate.SaveContactData(CommonVariables.getObjectID(), jsonObject, packageContext)).getBytes("UTF-8"));
+					ou.flush();
+					charcount = bff.read(charbuffer);
 				}
 			}
-			
-			CommonVariables.setLatestTime(df.parse(jsonObject
-					.getString("LatestTime")));
-			
 			ou.close();
 			in.close();
 			sockettoServer.close();

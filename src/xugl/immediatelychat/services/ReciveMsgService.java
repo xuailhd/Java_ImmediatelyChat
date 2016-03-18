@@ -152,11 +152,9 @@ public class ReciveMsgService extends Service {
 						reciverid = jsonObject.getString(CommonFlag
 								.getF_GroupID());
 
-						if (df.parse(jsonObject.getString("SendTime"))
-								.getTime() > CommonVariables.getLatestTime()
-								.getTime()) {
-							CommonVariables.setLatestTime(df.parse(jsonObject
-									.getString("SendTime")));
+						if (jsonObject.getString("LatestTime").compareTo(CommonVariables.getLatestTime())> 0) 
+						{
+							CommonVariables.setLatestTime(jsonObject.getString("LatestTime"));
 						}
 
 						intent.putExtra("MSG", message);
@@ -183,9 +181,6 @@ public class ReciveMsgService extends Service {
 
 	public class SendMsgThread extends Thread
 	{
-		
-		
-		
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub

@@ -45,19 +45,6 @@ public class WelcomeActivity extends Activity {
 		
 		setContentView(R.layout.activity_welcome);
 
-		if(CommonVariables.getLocalDataManager().GetData("LatestTime", this).length()<=0)
-		{
-			CommonVariables.getLocalDataManager().SaveData("LatestTime", CommonVariables.getMinDate(), this);
-		}
-		
-		if(CommonVariables.getLocalDataManager().GetData("UpdateTime", this).length()<=0)
-		{
-			CommonVariables.getLocalDataManager().SaveData("UpdateTime", CommonVariables.getMinDate(), this);
-		}
-		
-		CommonVariables.setLatestTime(CommonVariables.getLocalDataManager().GetData("LatestTime", this));
-		CommonVariables.setUpdateTime(CommonVariables.getLocalDataManager().GetData("UpdateTime", this));
-
 		new Thread(){
 
 			@Override
