@@ -24,7 +24,16 @@ public class ContactDataOperate implements IContactDataOperate {
 			if(contactData.getInt("DataType")==1)
 			{
 				localDataStr=CommonVariables.getLocalDataManager().GetData(objectID, "ContactPersonLists", packageContext);
-				jsonArray=new JSONArray(localDataStr);
+				
+				if(localDataStr==null)
+				{
+					jsonArray=new JSONArray();
+				}
+				else
+				{
+					jsonArray=new JSONArray(localDataStr);
+				}
+				
 				
 				while(i<jsonArray.length())
 				{
@@ -58,7 +67,14 @@ public class ContactDataOperate implements IContactDataOperate {
 			if(contactData.getInt("DataType")==2)
 			{
 				localDataStr=CommonVariables.getLocalDataManager().GetData(objectID, "ContactGroups", packageContext);
-				jsonArray=new JSONArray(localDataStr);
+				if(localDataStr==null)
+				{
+					jsonArray=new JSONArray();
+				}
+				else
+				{
+					jsonArray=new JSONArray(localDataStr);
+				}
 				
 				while(i<jsonArray.length())
 				{
@@ -91,7 +107,14 @@ public class ContactDataOperate implements IContactDataOperate {
 			if(contactData.getInt("DataType")==3)
 			{
 				localDataStr=CommonVariables.getLocalDataManager().GetData(objectID, "ContactGroupSubs", packageContext);
-				jsonArray=new JSONArray(localDataStr);
+				if(localDataStr==null)
+				{
+					jsonArray=new JSONArray();
+				}
+				else
+				{
+					jsonArray=new JSONArray(localDataStr);
+				}
 				
 				while(i<jsonArray.length())
 				{
@@ -129,7 +152,12 @@ public class ContactDataOperate implements IContactDataOperate {
 			{
 				jsonObject.put("UpdateTime",  contactData.getString("UpdateTime"));
 				CommonVariables.getLocalDataManager().SaveData(objectID,"ContactPerson", jsonObject.toString(), packageContext);
+				CommonVariables.setUpdateTime(contactData.getString("UpdateTime"));
 			}
+			
+			localDataStr=null;
+			jsonObject=null;
+			jsonArray=null;
 			
 			contactDataID= contactData.getString("ContactDataID");
 			
@@ -145,7 +173,7 @@ public class ContactDataOperate implements IContactDataOperate {
 		String localDataStr=null;
 		JSONArray jsonArray=null;
 		ContactPersonList[] contactPersonLists=null;
-		ContactPersonList contactPersonList;
+		ContactPersonList contactPersonList=null;
 		int i=0;
 		try {
 			localDataStr=CommonVariables.getLocalDataManager().GetData(objectID, "ContactPersonLists", packageContext);
@@ -168,6 +196,8 @@ public class ContactDataOperate implements IContactDataOperate {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		localDataStr=null;
+		jsonArray=null;
 		return contactPersonLists;
 	}
 	
@@ -198,6 +228,8 @@ public class ContactDataOperate implements IContactDataOperate {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		localDataStr=null;
+		jsonArray=null;
 		return contactGroups;
 	}
 	
@@ -228,6 +260,40 @@ public class ContactDataOperate implements IContactDataOperate {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		localDataStr=null;
+		jsonArray=null;
 		return contactGroupSubs;
+	}
+
+	@Override
+	public void InitContactPersonInfo(String objectID, Context packageContext) {
+		// TODO Auto-generated method stub
+		String localDataStr=null;
+		JSONObject jsonObject=null;
+		try {
+			localDataStr=CommonVariables.getLocalDataManager().GetData(objectID, "ContactPerson", packageContext);
+			
+			if(localDataStr==null)
+			{
+				jsonObject=new JSONObject();
+				jsonObject.put("UpdateTime", CommonVariables.getMinDate());
+				jsonObject.put("UpdateTime", CommonVariables.getMinDate());
+				CommonVariables.getLocalDataManager().SaveData(objectID, "ContactPerson",jsonObject.toString(), packageContext);
+			}
+			else
+			{
+				jsonObject=new JSONObject(localDataStr);
+			}
+			
+			
+			CommonVariables.setUpdateTime(jsonObject.getString("UpdateTime"));
+			CommonVariables.setLatestTime(jsonObject.getString("UpdateTime"));
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		localDataStr=null;
+		jsonObject=null;
 	}
 }

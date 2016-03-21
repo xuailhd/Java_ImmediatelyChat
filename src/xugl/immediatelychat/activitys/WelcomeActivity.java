@@ -27,7 +27,6 @@ public class WelcomeActivity extends Activity {
 			// TODO Auto-generated method stub
 			Intent intent = new Intent();
 			if (isServiceWork(WelcomeActivity.this,"xugl.immediatelychat.services.ReciveMsgService")){
-				
 				intent.setClass(WelcomeActivity.this, MainActivity.class);
 	            startActivity(intent);
 			}

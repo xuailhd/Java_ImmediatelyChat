@@ -127,6 +127,8 @@ public class MainActivity extends Activity {
 		editText=(EditText)findViewById(R.id.chatinput);
 		scrollView=(ScrollView)findViewById(R.id.scrollView1);
 		
+		try
+		{
 		//bing Service
 		//Intent intent =new Intent("xugl.services.ReciveMsgService").setPackage(this.getPackageName());
 		//bindService(intent,conn,Context.BIND_AUTO_CREATE);
@@ -179,6 +181,10 @@ public class MainActivity extends Activity {
 					sendMsg.doSend(text);
 				}
 			}});
+		}catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	

@@ -180,7 +180,7 @@ public class SendMsg implements ISendMsg {
 		try {
 			IContactDataOperate contactDataOperate=null;
 			char[] charbuffer = new char[1024];
-			String tempStr;
+//			String tempStr;
 			int charcount;
 			Socket sockettoServer = new Socket();
 			sockettoServer.connect(
@@ -189,6 +189,10 @@ public class SendMsg implements ISendMsg {
 
 			OutputStream ou = sockettoServer.getOutputStream();
 			InputStream in = sockettoServer.getInputStream();
+			
+			contactDataOperate=new ContactDataOperate();
+			contactDataOperate.InitContactPersonInfo(CommonVariables.getObjectID(),packageContext);
+			Log.e("Test", "init UA info:" + CommonVariables.getLatestTime() + "  " + CommonVariables.getUpdateTime());
 			
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put(CommonFlag.getF_ObjectID(), CommonVariables.getObjectID());
@@ -203,17 +207,15 @@ public class SendMsg implements ISendMsg {
 			charcount = bff.read(charbuffer);
 			// 获取客户端的信息
 			msg=String.valueOf(charbuffer, 0, charcount);
+			jsonObject=null;
 			jsonObject = new JSONObject(msg);
 			CommonVariables.setMCSIP(jsonObject.getString("MCS_IP"));
 			CommonVariables.setMCSPort(jsonObject.getInt("MCS_Port"));
 			
-			String mmsUpdateTime= jsonObject
-					.getString("UpdateTime");
+			String mmsUpdateTime= jsonObject.getString("UpdateTime");
 			
-			if(mmsUpdateTime.compareTo(CommonFlag.getF_UpdateTime())>0)
+			if(mmsUpdateTime.compareTo(CommonVariables.getUpdateTime())>0)
 			{
-				contactDataOperate=new ContactDataOperate();
-				
 				jsonObject = new JSONObject();
 				jsonObject.put(CommonFlag.getF_ObjectID(), CommonVariables.getObjectID());
 				jsonObject.put(CommonFlag.getF_UpdateTime(),CommonVariables.getUpdateTime());
@@ -224,6 +226,7 @@ public class SendMsg implements ISendMsg {
 				while(charcount>0)
 				{
 					msg=String.valueOf(charbuffer, 0, charcount);
+					Log.e("Test", "MMS UA info:" + msg);
 					jsonObject = new JSONObject(msg);
 					ou.write((CommonFlag.getF_MMSVerifyFBUAGetUAInfo()+
 							contactDataOperate.SaveContactData(CommonVariables.getObjectID(), jsonObject, packageContext)).getBytes("UTF-8"));
@@ -231,6 +234,7 @@ public class SendMsg implements ISendMsg {
 					charcount = bff.read(charbuffer);
 				}
 			}
+			jsonObject=null;
 			ou.close();
 			in.close();
 			sockettoServer.close();
@@ -248,7 +252,6 @@ public class SendMsg implements ISendMsg {
 	private void ConnectMCS(Context packageContext) {
 		try {
 			char[] charbuffer = new char[1024];
-			DateFormat df = new SimpleDateFormat(CommonVariables.getDateFormat());
 			int charcount;
 			Socket serivce = new Socket();
 			serivce.connect(new InetSocketAddress(CommonVariables.getMCSIP(),
@@ -260,10 +263,8 @@ public class SendMsg implements ISendMsg {
 					"UTF-8"));
 			
 			JSONObject jsonObject = new JSONObject();
-			jsonObject.put(CommonFlag.getF_ObjectID(),
-					CommonVariables.getObjectID());
-			jsonObject.put(CommonFlag.getF_UpdateTime(),
-					df.format(CommonVariables.getUpdateTime()));
+			jsonObject.put(CommonFlag.getF_ObjectID(),CommonVariables.getObjectID());
+			jsonObject.put(CommonFlag.getF_UpdateTime(),CommonVariables.getUpdateTime());
 			String msg = CommonFlag.getF_MCSVerifyUA() + jsonObject.toString();
 			
 			String mcsRereturn=null;
@@ -308,20 +309,20 @@ public class SendMsg implements ISendMsg {
 		}
 	}
 
-	private void UnServerBox(String serverMsg) {
-		try {
-			Log.e("Test", "MMS Return:" + serverMsg);
-			JSONObject jsonObject = new JSONObject(serverMsg);
-			CommonVariables.setMCSIP(jsonObject.getString("MCS_IP"));
-			CommonVariables.setMCSPort(jsonObject.getInt("MCS_Port"));
-			DateFormat df = new SimpleDateFormat(CommonVariables.getDateFormat());
-			CommonVariables.setLatestTime(df.parse(jsonObject
-					.getString("LatestTime")));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
+//	private void UnServerBox(String serverMsg) {
+//		try {
+//			Log.e("Test", "MMS Return:" + serverMsg);
+//			JSONObject jsonObject = new JSONObject(serverMsg);
+//			CommonVariables.setMCSIP(jsonObject.getString("MCS_IP"));
+//			CommonVariables.setMCSPort(jsonObject.getInt("MCS_Port"));
+//			DateFormat df = new SimpleDateFormat(CommonVariables.getDateFormat());
+//			CommonVariables.setLatestTime(df.parse(jsonObject
+//					.getString("LatestTime")));
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//
+//	}
 
 }

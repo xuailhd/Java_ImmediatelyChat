@@ -15,4 +15,6 @@ public interface IContactDataOperate {
 	public ContactGroup[] LoadContactGroup(String objectID,Context packageContext);
 	
 	public ContactGroupSub[] LoadContactGroupSub(String objectID,Context packageContext);
+	
+	public void InitContactPersonInfo(String objectID,Context packageContext);
 }
