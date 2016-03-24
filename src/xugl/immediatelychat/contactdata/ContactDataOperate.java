@@ -1,10 +1,11 @@
-package xu.immediatelychat.contactdata;
+package xugl.immediatelychat.contactdata;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.util.Log;
 import xugl.immediatelychat.common.CommonVariables;
 import xugl.immediatelychat.models.ContactGroup;
 import xugl.immediatelychat.models.ContactGroupSub;
@@ -49,6 +50,7 @@ public class ContactDataOperate implements IContactDataOperate {
 				if(findindex>=0)
 				{
 					jsonArray.getJSONObject(findindex).put("IsDelete", contactData.getBoolean("IsDelete"));
+					jsonArray.getJSONObject(findindex).put("ContactPersonName", contactData.getString("ContactPersonName"));
 				}
 				else
 				{
@@ -88,7 +90,7 @@ public class ContactDataOperate implements IContactDataOperate {
 				
 				if(findindex>=0)
 				{
-					jsonArray.getJSONObject(findindex).put("GroupName", contactData.getBoolean("GroupName"));
+					jsonArray.getJSONObject(findindex).put("GroupName", contactData.getString("GroupName"));
 					jsonArray.getJSONObject(findindex).put("IsDelete", contactData.getBoolean("IsDelete"));
 				}
 				else
@@ -178,6 +180,11 @@ public class ContactDataOperate implements IContactDataOperate {
 		try {
 			localDataStr=CommonVariables.getLocalDataManager().GetData(objectID, "ContactPersonLists", packageContext);
 
+			if(localDataStr==null)
+			{
+				return contactPersonLists;
+			}
+			
 			jsonArray=new JSONArray(localDataStr);
 			
 			contactPersonLists=new ContactPersonList[jsonArray.length()];
@@ -211,6 +218,13 @@ public class ContactDataOperate implements IContactDataOperate {
 		try {
 			localDataStr=CommonVariables.getLocalDataManager().GetData(objectID, "ContactGroups", packageContext);
 
+			if(localDataStr==null)
+			{
+				return contactGroups;
+			}
+			
+			Log.e("Test", localDataStr);
+			
 			jsonArray=new JSONArray(localDataStr);
 			
 			contactGroups=new ContactGroup[jsonArray.length()];
@@ -243,6 +257,11 @@ public class ContactDataOperate implements IContactDataOperate {
 		try {
 			localDataStr=CommonVariables.getLocalDataManager().GetData(objectID, "ContactGroupSubs", packageContext);
 
+			if(localDataStr==null)
+			{
+				return contactGroupSubs;
+			}
+			
 			jsonArray=new JSONArray(localDataStr);
 			
 			contactGroupSubs=new ContactGroupSub[jsonArray.length()];
@@ -273,21 +292,21 @@ public class ContactDataOperate implements IContactDataOperate {
 		try {
 			localDataStr=CommonVariables.getLocalDataManager().GetData(objectID, "ContactPerson", packageContext);
 			
-			if(localDataStr==null)
-			{
+//			if(localDataStr==null)
+//			{
 				jsonObject=new JSONObject();
 				jsonObject.put("UpdateTime", CommonVariables.getMinDate());
-				jsonObject.put("UpdateTime", CommonVariables.getMinDate());
+				jsonObject.put("LatestTime", CommonVariables.getMinDate());
 				CommonVariables.getLocalDataManager().SaveData(objectID, "ContactPerson",jsonObject.toString(), packageContext);
-			}
-			else
-			{
-				jsonObject=new JSONObject(localDataStr);
-			}
+//			}
+//			else
+//			{
+//				jsonObject=new JSONObject(localDataStr);
+//			}
 			
 			
 			CommonVariables.setUpdateTime(jsonObject.getString("UpdateTime"));
-			CommonVariables.setLatestTime(jsonObject.getString("UpdateTime"));
+			CommonVariables.setLatestTime(jsonObject.getString("LatestTime"));
 			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block

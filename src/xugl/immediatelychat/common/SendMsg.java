@@ -25,12 +25,13 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import xu.immediatelychat.contactdata.ContactDataOperate;
-import xu.immediatelychat.contactdata.IContactDataOperate;
 import xugl.immediatelychat.activitys.LoginActivity;
+import xugl.immediatelychat.contactdata.ContactDataOperate;
+import xugl.immediatelychat.contactdata.IContactDataOperate;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -88,6 +89,87 @@ public class SendMsg implements ISendMsg {
 			e.printStackTrace();
 		}
 		return CommonFlag.getF_MCSVerifyUAMSG() + msgObject.toString();
+	}
+
+	@Override
+	public void sendSearchRequest(final String key,final int type,final Context packageContext) {
+		// TODO Auto-generated method stub
+		new Thread(new Runnable(){
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(); 
+				try {
+					int charcount;
+					JSONArray jsonArray=null;
+					String retrunStr=null;
+					char[] charbuffer = new char[1024];
+					Socket sockettoServer = new Socket();
+					sockettoServer.connect(
+							new InetSocketAddress(CommonVariables.getMCSIP(),
+									CommonVariables.getMCSPort()), 5000);
+					
+					OutputStream ou = sockettoServer.getOutputStream();
+					InputStream in = sockettoServer.getInputStream();
+					
+					JSONObject jsonObject = new JSONObject();
+					jsonObject.put(CommonFlag.getF_ObjectID(), CommonVariables.getObjectID());
+					jsonObject.put(CommonFlag.getF_Type(), type);
+					jsonObject.put(CommonFlag.getF_SearchKey(), key);
+					String msg = CommonFlag.getF_MMSVerifyUASearch() + jsonObject.toString();
+					ou.write(msg.getBytes("UTF-8"));
+					ou.flush();
+					
+					BufferedReader bff = new BufferedReader(new InputStreamReader(in,"UTF-8"));
+					charcount=bff.read(charbuffer);
+					
+					if(charcount>0)
+					{
+						jsonArray=new JSONArray();
+					}
+					
+					while(charcount>0)
+					{
+						retrunStr=String.valueOf(charbuffer, 0, charcount);
+						jsonObject=new JSONObject(retrunStr);
+						jsonArray.put(jsonObject);
+						charcount=bff.read(charbuffer);
+					}
+					
+					if(jsonArray!=null && jsonArray.length()>0)
+					{
+						intent.putExtra("SearchResult", jsonArray.toString());
+					}
+					else
+					{
+						intent.putExtra("SearchResult", "No Result");
+					}
+					ou.close();
+					in.close();
+					sockettoServer.close();
+				} 
+				catch(JSONException e)
+				{
+					e.printStackTrace();
+					intent.putExtra("SearchResult","No Result");
+				}
+				catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					intent.putExtra("SearchResult", "No Connect");
+				}
+				if(type==1)
+				{
+					intent.setAction("SearchPerson"); 
+					packageContext.sendBroadcast(intent); 
+				}
+				else if (type==2)
+				{
+					intent.setAction("SearchGroup");
+					packageContext.sendBroadcast(intent); 
+				}
+			}
+		}).start();
 	}
 
 	@Override
@@ -180,7 +262,7 @@ public class SendMsg implements ISendMsg {
 		try {
 			IContactDataOperate contactDataOperate=null;
 			char[] charbuffer = new char[1024];
-//			String tempStr;
+			String tempStr;
 			int charcount;
 			Socket sockettoServer = new Socket();
 			sockettoServer.connect(
@@ -202,7 +284,7 @@ public class SendMsg implements ISendMsg {
 			ou.write(msg.getBytes("UTF-8"));
 			ou.flush();
 
-			BufferedReader bff = new BufferedReader(new InputStreamReader(in));
+			BufferedReader bff = new BufferedReader(new InputStreamReader(in,"UTF-8"));
 
 			charcount = bff.read(charbuffer);
 			// 获取客户端的信息
@@ -228,8 +310,10 @@ public class SendMsg implements ISendMsg {
 					msg=String.valueOf(charbuffer, 0, charcount);
 					Log.e("Test", "MMS UA info:" + msg);
 					jsonObject = new JSONObject(msg);
-					ou.write((CommonFlag.getF_MMSVerifyFBUAGetUAInfo()+
-							contactDataOperate.SaveContactData(CommonVariables.getObjectID(), jsonObject, packageContext)).getBytes("UTF-8"));
+					tempStr=CommonFlag.getF_MMSVerifyFBUAGetUAInfo()+
+							contactDataOperate.SaveContactData(CommonVariables.getObjectID(), jsonObject, packageContext);
+					Log.e("Test", "MMS FB UA info:" + tempStr);
+					ou.write(tempStr.getBytes("UTF-8"));
 					ou.flush();
 					charcount = bff.read(charbuffer);
 				}

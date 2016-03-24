@@ -10,36 +10,29 @@
         android:layout_gravity="center"
         android:gravity="center_vertical"
         android:orientation="horizontal" >
-
-
+        <TextView
+            android:id="@+id/chatsView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:text="Chats"/>
 
         <TextView
-            android:id="@+id/imgClassify"
+            android:id="@+id/personsView"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1.0"
-            android:text="chats"/>
+            android:gravity="center"
+            android:text="Persons" />
 
-        <ImageView
-            android:id="@+id/imgSearch"
+        <TextView
+            android:id="@+id/groupsView"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1.0"
-            android:background="@drawable/ic_launcher" />
-
-        <ImageView
-            android:id="@+id/imgShoppingCar"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1.0"
-            android:background="@drawable/ic_launcher" />
-
-        <ImageView
-            android:id="@+id/imgMore"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1.0"
-            android:background="@drawable/ic_launcher" />
+            android:gravity="center"
+            android:text="Groups" />
     </LinearLayout>
 
 </merge>

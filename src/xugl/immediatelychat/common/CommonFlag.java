@@ -17,6 +17,8 @@ public class CommonFlag {
     private static String f_LatestTime="LatestTime";
     private static String f_UpdateTime="UpdateTime";
     private static String f_GroupID="GroupID";
+    private static String f_Type="Type";
+    private static String f_SearchKey="SearchKey";
 
 	public static String getF_IP() {
 		return f_IP;
@@ -81,15 +83,26 @@ public class CommonFlag {
 	public static String getF_GroupID() {
 		return f_GroupID;
 	}
+	
+	public static String getF_Type() {
+		return f_Type;
+	}
+
+	public static String getF_SearchKey() {
+		return f_SearchKey;
+	}
 
 
 	private static String f_MMSVerifyUA="VerifyUA";
 	private static String f_MMSVerifyUAGetUAInfo = "MMSVerifyUAGetUAInfo";
 	private static String f_MMSVerifyFBUAGetUAInfo="MMSVerifyFBUAGetUAInfo";
+    private static String f_MMSVerifyUASearch="MMSVerifyUASearch";
+    private static String f_MMSVerifyUAFBSearch="MMSVerifyUAFBSearch";
 	private static String f_MCSVerifyUA="VerifyAccount";
 	private static String f_MCSVerifyUAMSG = "VerifyMSG";
     private static String f_MCSVerifyUAGetMSG = "VerifyGetMSG";
     private static String f_MCSReciveUAMSGFB = "VerifyMSGFB";
+
 
 	public static String getF_MMSVerifyUA() {
 		return f_MMSVerifyUA;
@@ -101,6 +114,14 @@ public class CommonFlag {
 	
 	public static String getF_MMSVerifyFBUAGetUAInfo() {
 		return f_MMSVerifyFBUAGetUAInfo;
+	}
+
+	public static String getF_MMSVerifyUASearch() {
+		return f_MMSVerifyUASearch;
+	}
+
+	public static String getF_MMSVerifyUAFBSearch() {
+		return f_MMSVerifyUAFBSearch;
 	}
 
 	public static String getF_MCSVerifyUA() {

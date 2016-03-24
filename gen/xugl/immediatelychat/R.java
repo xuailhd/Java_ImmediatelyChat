@@ -25,38 +25,46 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int Chats=0x7f080005;
-        public static final int Contacts=0x7f080006;
-        public static final int Groups=0x7f080007;
         public static final int ToolBar=0x7f080000;
-        public static final int account=0x7f080012;
-        public static final int action_settings=0x7f080018;
-        public static final int button1=0x7f08000b;
-        public static final int cancel=0x7f080015;
-        public static final int chatLayout=0x7f080009;
-        public static final int chatinput=0x7f08000a;
-        public static final int errorMsg=0x7f080017;
-        public static final int imageView1=0x7f08000c;
-        public static final int imgClassify=0x7f080001;
-        public static final int imgMore=0x7f080004;
-        public static final int imgSearch=0x7f080002;
-        public static final int imgShoppingCar=0x7f080003;
-        public static final int login=0x7f080016;
-        public static final int password=0x7f080014;
-        public static final int port=0x7f080010;
-        public static final int scrollView1=0x7f080008;
-        public static final int serverip=0x7f08000e;
-        public static final int textView1=0x7f08000d;
-        public static final int textView2=0x7f08000f;
-        public static final int textView3=0x7f080011;
-        public static final int textView4=0x7f080013;
+        public static final int account=0x7f080017;
+        public static final int action_settings=0x7f08001d;
+        public static final int button1=0x7f08000e;
+        public static final int cancel=0x7f08001a;
+        public static final int charsLayout=0x7f08000a;
+        public static final int chartsScrollView=0x7f080009;
+        public static final int chatLayout=0x7f08000c;
+        public static final int chatinput=0x7f08000d;
+        public static final int chatsView=0x7f080001;
+        public static final int errorMsg=0x7f08001c;
+        public static final int groupsScrollView=0x7f080007;
+        public static final int groupsView=0x7f080003;
+        public static final int groupslayout=0x7f080008;
+        public static final int imageView1=0x7f080011;
+        public static final int login=0x7f08001b;
+        public static final int password=0x7f080019;
+        public static final int personsScrollView=0x7f08000f;
+        public static final int personsView=0x7f080002;
+        public static final int personslayout=0x7f080010;
+        public static final int port=0x7f080015;
+        public static final int scrollView1=0x7f08000b;
+        public static final int search=0x7f080005;
+        public static final int searchinput=0x7f080004;
+        public static final int searchlayout=0x7f080006;
+        public static final int serverip=0x7f080013;
+        public static final int textView1=0x7f080012;
+        public static final int textView2=0x7f080014;
+        public static final int textView3=0x7f080016;
+        public static final int textView4=0x7f080018;
     }
     public static final class layout {
         public static final int activity_bar=0x7f030000;
-        public static final int activity_home=0x7f030001;
-        public static final int activity_main=0x7f030002;
-        public static final int activity_welcome=0x7f030003;
-        public static final int login_activity=0x7f030004;
+        public static final int activity_findcontact=0x7f030001;
+        public static final int activity_group=0x7f030002;
+        public static final int activity_home=0x7f030003;
+        public static final int activity_main=0x7f030004;
+        public static final int activity_person=0x7f030005;
+        public static final int activity_welcome=0x7f030006;
+        public static final int login_activity=0x7f030007;
     }
     public static final class menu {
         public static final int main=0x7f070000;

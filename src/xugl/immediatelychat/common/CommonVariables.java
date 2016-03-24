@@ -2,6 +2,11 @@ package xugl.immediatelychat.common;
 
 import org.json.JSONArray;
 
+import xugl.immediatelychar.chat.ChatOperate;
+import xugl.immediatelychar.chat.IChatOperate;
+import xugl.immediatelychat.contactdata.ContactDataOperate;
+import xugl.immediatelychat.contactdata.IContactDataOperate;
+
 public class CommonVariables {
 	private static String dateFormat="yyyy-MM-dd HH:mm:ss.SSS";
 	
@@ -24,6 +29,33 @@ public class CommonVariables {
 		return saveLocalDataManager;
 	}
 	
+	private static IContactDataOperate contactDataOperate;
+	public static IContactDataOperate getContactDataOperate() {
+		if(contactDataOperate==null)
+		{
+			contactDataOperate=new ContactDataOperate();
+		}
+		return contactDataOperate;
+	}
+	
+	private static IChatOperate chatOperate;
+	public static IChatOperate getChatOperate() {
+		if(chatOperate==null)
+		{
+			chatOperate=new ChatOperate();
+		}
+		return chatOperate;
+	}
+	
+	private static ISendMsg sendMsg;
+	public static ISendMsg getSendMsg() {
+		if(sendMsg==null)
+		{
+			sendMsg=new SendMsg();
+		}
+		return sendMsg;
+	}
+
 	private static String PSIP;
 	private static int PSPort;
 	private static String MMSIP;

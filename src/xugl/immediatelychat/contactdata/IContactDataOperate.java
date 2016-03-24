@@ -1,4 +1,4 @@
-package xu.immediatelychat.contactdata;
+package xugl.immediatelychat.contactdata;
 
 import org.json.JSONObject;
 

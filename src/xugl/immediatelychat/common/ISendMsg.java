@@ -10,4 +10,6 @@ public interface ISendMsg {
 	void doSend(String Msgstr);
 	
 	void postAccount(String account,String password, Context packageContext);
+	
+	void sendSearchRequest(String key,int type,Context packageContext);
 }

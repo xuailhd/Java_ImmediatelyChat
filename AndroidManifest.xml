@@ -38,6 +38,21 @@
             android:label="@string/app_name" >
         </activity>
         
+        <activity
+            android:name="xugl.immediatelychat.activitys.HomeActivity"
+            android:label="@string/app_name" >
+        </activity>
+        
+        <activity
+            android:name="xugl.immediatelychat.activitys.PersonsActivity"
+            android:label="@string/app_name" >
+        </activity>
+        
+        <activity
+            android:name="xugl.immediatelychat.activitys.GroupsActivity"
+            android:label="@string/app_name" >
+        </activity>
+        
         <service android:name="xugl.immediatelychat.services.ReciveMsgService"  >
             <intent-filter>
 				<action android:name="xugl.services.ReciveMsgService" />
