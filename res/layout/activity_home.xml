@@ -14,7 +14,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
+			<!--  
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content" >
@@ -47,6 +47,7 @@
                         android:gravity="center_vertical"
                         android:text="今天" />
 			</LinearLayout>
+			-->
         </LinearLayout>
     </ScrollView>
 

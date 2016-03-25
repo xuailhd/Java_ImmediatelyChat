@@ -292,18 +292,17 @@ public class ContactDataOperate implements IContactDataOperate {
 		try {
 			localDataStr=CommonVariables.getLocalDataManager().GetData(objectID, "ContactPerson", packageContext);
 			
-//			if(localDataStr==null)
-//			{
+			if(localDataStr==null)
+			{
 				jsonObject=new JSONObject();
 				jsonObject.put("UpdateTime", CommonVariables.getMinDate());
 				jsonObject.put("LatestTime", CommonVariables.getMinDate());
 				CommonVariables.getLocalDataManager().SaveData(objectID, "ContactPerson",jsonObject.toString(), packageContext);
-//			}
-//			else
-//			{
-//				jsonObject=new JSONObject(localDataStr);
-//			}
-			
+			}
+			else
+			{
+				jsonObject=new JSONObject(localDataStr);
+			}
 			
 			CommonVariables.setUpdateTime(jsonObject.getString("UpdateTime"));
 			CommonVariables.setLatestTime(jsonObject.getString("LatestTime"));

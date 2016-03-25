@@ -19,6 +19,8 @@ public class CommonFlag {
     private static String f_GroupID="GroupID";
     private static String f_Type="Type";
     private static String f_SearchKey="SearchKey";
+    
+
 
 	public static String getF_IP() {
 		return f_IP;
@@ -98,11 +100,13 @@ public class CommonFlag {
 	private static String f_MMSVerifyFBUAGetUAInfo="MMSVerifyFBUAGetUAInfo";
     private static String f_MMSVerifyUASearch="MMSVerifyUASearch";
     private static String f_MMSVerifyUAFBSearch="MMSVerifyUAFBSearch";
+    private static String f_MMSVerifyUAAddPerson = "MMSVerifyUAAddPerson";
+    private static String f_MMSVerifyUAAddGroup = "MMSVerifyUAAddGroup";
 	private static String f_MCSVerifyUA="VerifyAccount";
 	private static String f_MCSVerifyUAMSG = "VerifyMSG";
     private static String f_MCSVerifyUAGetMSG = "VerifyGetMSG";
     private static String f_MCSReciveUAMSGFB = "VerifyMSGFB";
-
+    
 
 	public static String getF_MMSVerifyUA() {
 		return f_MMSVerifyUA;
@@ -123,6 +127,14 @@ public class CommonFlag {
 	public static String getF_MMSVerifyUAFBSearch() {
 		return f_MMSVerifyUAFBSearch;
 	}
+	
+	public static String getF_MMSVerifyUAAddPerson() {
+		return f_MMSVerifyUAAddPerson;
+	}
+
+	public static String getF_MMSVerifyUAAddGroup() {
+		return f_MMSVerifyUAAddGroup;
+	}
 
 	public static String getF_MCSVerifyUA() {
 		return f_MCSVerifyUA;
@@ -140,7 +152,27 @@ public class CommonFlag {
 		return f_MCSReciveUAMSGFB;
 	}
 	
-	
+    private static String f_DestinationObjectID="DestinationObjectID";
+    private static String f_MCS_IP="MCS_IP";
+    private static String f_MCS_Port="MCS_Port";
+    private static String f_Status="Status";
+
+	public static String getF_DestinationObjectID() {
+		return f_DestinationObjectID;
+	}
+
+	public static String getF_MCS_IP() {
+		return f_MCS_IP;
+	}
+
+	public static String getF_MCS_Port() {
+		return f_MCS_Port;
+	}
+
+	public static String getF_Status() {
+		return f_Status;
+	}
+    
     
 
 }

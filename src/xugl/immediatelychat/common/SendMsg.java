@@ -106,8 +106,8 @@ public class SendMsg implements ISendMsg {
 					char[] charbuffer = new char[1024];
 					Socket sockettoServer = new Socket();
 					sockettoServer.connect(
-							new InetSocketAddress(CommonVariables.getMCSIP(),
-									CommonVariables.getMCSPort()), 5000);
+							new InetSocketAddress(CommonVariables.getMMSIP(),
+									CommonVariables.getMMSPort()), 5000);
 					
 					OutputStream ou = sockettoServer.getOutputStream();
 					InputStream in = sockettoServer.getInputStream();
@@ -133,6 +133,93 @@ public class SendMsg implements ISendMsg {
 						retrunStr=String.valueOf(charbuffer, 0, charcount);
 						jsonObject=new JSONObject(retrunStr);
 						jsonArray.put(jsonObject);
+						msg=CommonFlag.getF_MMSVerifyUAFBSearch() + jsonObject.getString("ContactDataID");
+						ou.write(msg.getBytes("UTF-8"));
+						ou.flush();
+						charcount=bff.read(charbuffer);
+					}
+					
+					if(jsonArray!=null && jsonArray.length()>0)
+					{
+						intent.putExtra("SearchResult", jsonArray.toString());
+					}
+					else
+					{
+						intent.putExtra("SearchResult", "No Result");
+					}
+					ou.close();
+					in.close();
+					sockettoServer.close();
+				} 
+				catch(JSONException e)
+				{
+					e.printStackTrace();
+					intent.putExtra("SearchResult","No Result");
+				}
+				catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					intent.putExtra("SearchResult", "No Connect");
+				}
+				if(type==1)
+				{
+					intent.setAction("SearchPerson"); 
+					packageContext.sendBroadcast(intent); 
+				}
+				else if (type==2)
+				{
+					intent.setAction("SearchGroup");
+					packageContext.sendBroadcast(intent); 
+				}
+			}
+		}).start();
+	}
+	
+
+	@Override
+	public void sendAddPersonRequest(String objectID) {
+		// TODO Auto-generated method stub
+		new Thread(new Runnable(){
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(); 
+				try {
+					int charcount;
+					JSONArray jsonArray=null;
+					String retrunStr=null;
+					char[] charbuffer = new char[1024];
+					Socket sockettoServer = new Socket();
+					sockettoServer.connect(
+							new InetSocketAddress(CommonVariables.getMMSIP(),
+									CommonVariables.getMMSPort()), 5000);
+					
+					OutputStream ou = sockettoServer.getOutputStream();
+					InputStream in = sockettoServer.getInputStream();
+					
+					JSONObject jsonObject = new JSONObject();
+					jsonObject.put(CommonFlag.getF_ObjectID(), CommonVariables.getObjectID());
+					jsonObject.put(CommonFlag.getF_DestinationObjectID() , value)
+					String msg = CommonFlag.getF_MMSVerifyUASearch() + jsonObject.toString();
+					ou.write(msg.getBytes("UTF-8"));
+					ou.flush();
+					
+					BufferedReader bff = new BufferedReader(new InputStreamReader(in,"UTF-8"));
+					charcount=bff.read(charbuffer);
+					
+					if(charcount>0)
+					{
+						jsonArray=new JSONArray();
+					}
+					
+					while(charcount>0)
+					{
+						retrunStr=String.valueOf(charbuffer, 0, charcount);
+						jsonObject=new JSONObject(retrunStr);
+						jsonArray.put(jsonObject);
+						msg=CommonFlag.getF_MMSVerifyUAFBSearch() + jsonObject.getString("ContactDataID");
+						ou.write(msg.getBytes("UTF-8"));
+						ou.flush();
 						charcount=bff.read(charbuffer);
 					}
 					
@@ -218,7 +305,7 @@ public class SendMsg implements ISendMsg {
 				if(status==1)
 				{
 					intent = new Intent(); // Itent就是我们要发送的内容
-					intent.putExtra("MSG", "Account or Password incorrect");
+					intent.putExtra("MSG", "Password incorrect");
 					intent.setAction("LoginActivity"); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
 					packageContext.sendBroadcast(intent); // 发送广播
 					return false;
@@ -233,10 +320,84 @@ public class SendMsg implements ISendMsg {
 					return false;
 				}
 				
+				if(status==3)
+				{
+					if(sendRegister(account,password,packageContext))
+					{
+						httpResponse = new DefaultHttpClient()
+						.execute(httpRequest);
+						if (httpResponse.getStatusLine().getStatusCode() == 200) {
+							strResult = EntityUtils.toString(httpResponse
+									.getEntity());
+							psresultjsonObject = new JSONObject(strResult);
+						}
+						else
+						{
+							Log.e("Test", "Post failure:"
+									+ httpResponse.getStatusLine().getStatusCode());
+							intent = new Intent(); // Itent就是我们要发送的内容
+							intent.putExtra("MSG", "Can not connect PS");
+							intent.setAction("LoginActivity"); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
+							packageContext.sendBroadcast(intent); // 发送广播
+						}
+					}
+				}
+				
 				CommonVariables.setMMSIP(psresultjsonObject.getString("IP"));
 				CommonVariables.setMMSPort(psresultjsonObject.getInt("Port"));
 				CommonVariables.setObjectID(psresultjsonObject.getString("ObjectID"));
 				CommonVariables.setAccount(account);
+				return true;
+
+			} else {
+				Log.e("Test", "Post failure:"
+						+ httpResponse.getStatusLine().getStatusCode());
+				intent = new Intent(); // Itent就是我们要发送的内容
+				intent.putExtra("MSG", "Can not connect PS");
+				intent.setAction("LoginActivity"); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
+				packageContext.sendBroadcast(intent); // 发送广播
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			intent = new Intent(); // Itent就是我们要发送的内容
+			intent.putExtra("MSG", "Can not connect PS");
+			intent.setAction("LoginActivity"); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
+			packageContext.sendBroadcast(intent); // 发送广播
+		}
+		return false;
+	}
+	
+	
+	private boolean sendRegister(String account, String password,Context packageContext)
+	{
+		Intent intent;
+		HttpGet httpRequest = new HttpGet("http://" + CommonVariables.getPSIP()
+				+ ":" + CommonVariables.getPSPort()
+				+ "/ContactPerson/Register?" + CommonFlag.getF_Account()
+				+ "=" + account + "&" + CommonFlag.getF_Password() + "="
+				+ password);
+		try {
+			/* 发送请求并等待响应 */
+			HttpResponse httpResponse = new DefaultHttpClient()
+					.execute(httpRequest);
+			/* 若状态码为200 ok */
+			if (httpResponse.getStatusLine().getStatusCode() == 200) {
+				/* 读 */
+				String strResult = EntityUtils.toString(httpResponse
+						.getEntity());
+				
+				Log.e("Test", "PS register return:"
+						+ strResult);
+				if(strResult.equals("register failed"))
+				{
+					intent = new Intent(); // Itent就是我们要发送的内容
+					intent.putExtra("MSG", "New account register failed");
+					intent.setAction("LoginActivity"); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
+					packageContext.sendBroadcast(intent); // 发送广播
+					return false;
+				}
+				
 				return true;
 
 			} else {

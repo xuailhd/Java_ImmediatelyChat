@@ -1,5 +1,9 @@
 package xugl.immediatelychat.activitys;
 
+import android.content.Intent;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -12,6 +16,7 @@ import xugl.immediatelychat.models.ContactPersonList;
 public class PersonsActivity extends BaseActivity {
 	private LinearLayout mainLayout;
 	private ScrollView scrollView;
+	private TextView addperson;
 	@Override
 	protected void setView() {
 		// TODO Auto-generated method stub
@@ -21,20 +26,28 @@ public class PersonsActivity extends BaseActivity {
 	@Override
 	protected void init() {
 		// TODO Auto-generated method stub
-		ContactPersonList[] contactPersonLists= CommonVariables.getContactDataOperate().LoadContactPersonList(CommonVariables.getObjectID(), this);
-		if(contactPersonLists==null)
-		{
-			return;
-		}
-		
-		if(contactPersonLists.length<1)
-		{
-			return;
-		}
-		
 		mainLayout=(LinearLayout)findViewById(R.id.personslayout);
 		scrollView=(ScrollView)findViewById(R.id.personsScrollView);
+		addperson=(TextView)findViewById(R.id.addperson);
+
+		addperson.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Log.e("Test", "addperson");
+				Intent intent=new Intent();
+				intent.setClass(PersonsActivity.this, AddPersonActivity.class);
+				startActivity(intent);
+			}
+			
+		});
 		
+		ContactPersonList[] contactPersonLists= CommonVariables.getContactDataOperate().LoadContactPersonList(CommonVariables.getObjectID(), this);
+		if(contactPersonLists==null || contactPersonLists.length<1)
+		{
+			return;
+		}
 		for(int i=0;i<contactPersonLists.length;i++)
 		{
 			addPersonIntoView(contactPersonLists[i]);

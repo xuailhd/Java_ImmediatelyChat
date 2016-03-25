@@ -7,6 +7,8 @@ import org.json.JSONObject;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,26 +18,23 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import xugl.immediatelychat.R;
-import xugl.immediatelychat.common.CommonFlag;
 import xugl.immediatelychat.common.CommonVariables;
 import xugl.immediatelychat.models.ContactGroup;
 import xugl.immediatelychat.models.ContactPerson;
-import xugl.immediatelychat.models.ContactPersonList;
 
 public class AddGroupActivity extends BaseActivity {
 	private Button search;
 	private EditText searchinput;
 	private LinearLayout searchlayout;
+	private Handler mHandler=new Handler();
+	private ReceiveBroadCast receiveBroadCast;
+	
 	
 	private class ReceiveBroadCast extends BroadcastReceiver
 	{
-
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			// TODO Auto-generated method stub
-			String msgcontent=null;
-        	String account=null;
-        	String objectID=null;
         	JSONArray jsonArray =null;
         	ContactGroup contactGroup=null;
         	ContactGroup[] contactGroups=null;
@@ -56,6 +55,7 @@ public class AddGroupActivity extends BaseActivity {
             				contactGroup=new ContactGroup();
             				contactGroup.setGroupName(jsonArray.getJSONObject(i).getString("GroupName"));
             				contactGroup.setGroupObjectID(jsonArray.getJSONObject(i).getString("GroupObjectID"));
+            				contactGroups[i]=contactGroup;
                 		}
             		}
                 }
@@ -64,8 +64,22 @@ public class AddGroupActivity extends BaseActivity {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+            
+            final ContactGroup[] contactGroupsnew=contactGroups;
+
+        	mHandler.post(new Runnable() {  
+				public void run() {  
+		            if(contactGroupsnew!=null && contactGroupsnew.length>0)
+		            {
+    					for(int i=0;i<contactGroupsnew.length;i++)
+    	            	{
+    	            		addGroupIntoView(contactGroupsnew[i]);
+    	            	}
+		            }
+		            search.setEnabled(true);
+				}	
+			}); 
 		}
-		
 	}
 	@Override
 	protected void setView() {
@@ -85,12 +99,18 @@ public class AddGroupActivity extends BaseActivity {
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					String key=search.getText().toString();
-					CommonVariables.getSendMsg().sendSearchRequest(key, 1, AddGroupActivity.this);
+					String key=searchinput.getText().toString();
+					CommonVariables.getSendMsg().sendSearchRequest(key, 2, AddGroupActivity.this);
 					search.setEnabled(false);
 				}
 			}
 		);
+		
+		// ×¢²á¹ã²¥½ÓÊÕ
+        receiveBroadCast = new ReceiveBroadCast();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("SearchGroup");    
+        registerReceiver(receiveBroadCast, filter);
 	}
 	
 	private void addGroupIntoView(ContactGroup contactGroup)
@@ -109,22 +129,15 @@ public class AddGroupActivity extends BaseActivity {
 		
 		searchlayout.addView(linearLayout);
 	}
-	
-	private void addPersonIntoView(ContactPerson contactPerson)
-	{
-		ImageView pic=new ImageView(AddGroupActivity.this);
-		pic.setImageResource(R.drawable.ic_launcher);
-		
-		TextView name=new TextView(AddGroupActivity.this);
-		name.setText(contactPerson.getContactName());
-		
-		LinearLayout linearLayout=new LinearLayout(AddGroupActivity.this);
-		linearLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-		linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-		linearLayout.addView(pic);
-		linearLayout.addView(name);
 
-		searchlayout.addView(linearLayout);
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		if(receiveBroadCast!=null)
+		{
+			unregisterReceiver(receiveBroadCast);
+		}
+		super.onDestroy();
 	}
 	
 }

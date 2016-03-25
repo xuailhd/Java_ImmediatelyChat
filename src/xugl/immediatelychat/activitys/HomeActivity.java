@@ -1,5 +1,6 @@
 package xugl.immediatelychat.activitys;
 
+import android.util.Log;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,20 +22,17 @@ public class HomeActivity extends BaseActivity {
 	@Override
 	protected void init() {
 		// TODO Auto-generated method stub
-		ChatModel[] chatModels=CommonVariables.getChatOperate().GetChats();
-		
-		if(chatModels==null)
-		{
-			return;
-		}
-		
-		if(chatModels.length<1)
-		{
-			return;
-		}
-		
+
 		mainLayout=(LinearLayout)findViewById(R.id.charsLayout);
 		scrollView=(ScrollView)findViewById(R.id.chartsScrollView);
+		Log.e("Test", "123213");
+		
+		ChatModel[] chatModels=CommonVariables.getChatOperate().GetChats();
+		
+		if(chatModels==null || chatModels.length<1)
+		{
+			return;
+		}
 		
 		for(int i=0;i<chatModels.length;i++)
 		{

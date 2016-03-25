@@ -1,5 +1,9 @@
 package xugl.immediatelychat.activitys;
 
+import android.content.Intent;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -11,6 +15,7 @@ import xugl.immediatelychat.models.ContactGroup;
 public class GroupsActivity extends BaseActivity {
 	private LinearLayout mainLayout;
 	private ScrollView scrollView;
+	private TextView addGroup;
 	
 	@Override
 	protected void setView() {
@@ -21,19 +26,28 @@ public class GroupsActivity extends BaseActivity {
 	@Override
 	protected void init() {
 		// TODO Auto-generated method stub
-		ContactGroup[] contactGroups= CommonVariables.getContactDataOperate().LoadContactGroup(CommonVariables.getObjectID(), this);
-		if(contactGroups==null)
-		{
-			return;
-		}
-		
-		if(contactGroups.length<1)
-		{
-			return;
-		}
-		
+
 		mainLayout=(LinearLayout)findViewById(R.id.groupslayout);
 		scrollView=(ScrollView)findViewById(R.id.groupsScrollView);
+		addGroup=(TextView)findViewById(R.id.addgroup);
+
+		addGroup.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Intent intent=new Intent();
+				intent.setClass(GroupsActivity.this, AddGroupActivity.class);
+				startActivity(intent);
+			}
+			
+		});
+		
+		ContactGroup[] contactGroups= CommonVariables.getContactDataOperate().LoadContactGroup(CommonVariables.getObjectID(), this);
+		if(contactGroups==null || contactGroups.length<1)
+		{
+			return;
+		}
 		
 		for(int i=0;i<contactGroups.length;i++)
 		{
