@@ -13,5 +13,5 @@ public interface ISendMsg {
 	
 	void sendSearchRequest(String key,int type,Context packageContext);
 	
-	void sendAddPersonRequest(String objectID);
+	void sendAddPersonRequest(String objectID,Context packageContext);
 }

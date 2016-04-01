@@ -25,9 +25,9 @@ public class AddPersonActivity extends  BaseActivity  {
 	private EditText searchinput;
 	private LinearLayout searchlayout;
 	private Handler mHandler=new Handler();
-	private ReceiveBroadCast receiveBroadCast;
+	private SearchBroadCast searchBroadCast;
 	
-	private class ReceiveBroadCast extends BroadcastReceiver
+	private class SearchBroadCast extends BroadcastReceiver
 	{
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -35,47 +35,61 @@ public class AddPersonActivity extends  BaseActivity  {
         	JSONArray jsonArray =null;
         	ContactPerson contactPerson=null;
         	ContactPerson[] contactPersons=null;
-            //得到广播中得到的数据，并显示出来
-            final String message = intent.getStringExtra("SearchResult");
-            Log.e("Test", "get search message:" + message);
 
-            try {
-            	if(!message.equals("No Result") && !message.equals("No Connect"))
-                {
-            		jsonArray=new JSONArray(message);
-            		
-            		if(jsonArray!=null && jsonArray.length()>0)
-            		{
-            			contactPersons=new ContactPerson[jsonArray.length()];
-            			for(int i=0;i<jsonArray.length();i++)
-                		{
-            				contactPerson=new ContactPerson();
-            				contactPerson.setContactName(jsonArray.getJSONObject(i).getString("ContactName"));
-            				contactPerson.setObjectID(jsonArray.getJSONObject(i).getString("ObjectID"));
-            				contactPersons[i]=contactPerson;
-                		}
-            		}
-                }
-				
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-            
-            final ContactPerson[] contactPersonsnew=contactPersons;
-
-        	mHandler.post(new Runnable() {  
-				public void run() {  
-		            if(contactPersonsnew!=null && contactPersonsnew.length>0)
-		            {
-    					for(int i=0;i<contactPersonsnew.length;i++)
-    	            	{
-    						addPersonIntoView(contactPersonsnew[i]);
-    	            	}
-		            }
-		            search.setEnabled(true);
-				}	
-			}); 
+        	String broadCastType=intent.getStringExtra("BroadCastType");
+        	
+        	if(broadCastType.equals("Search"))
+        	{
+	            String message = intent.getStringExtra("SearchResult");
+	            Log.e("Test", "get search message:" + message);
+	
+	            try {
+	            	if(!message.equals("No Result") && !message.equals("No Connect"))
+	                {
+	            		jsonArray=new JSONArray(message);
+	            		
+	            		if(jsonArray!=null && jsonArray.length()>0)
+	            		{
+	            			contactPersons=new ContactPerson[jsonArray.length()];
+	            			for(int i=0;i<jsonArray.length();i++)
+	                		{
+	            				contactPerson=new ContactPerson();
+	            				contactPerson.setContactName(jsonArray.getJSONObject(i).getString("ContactName"));
+	            				contactPerson.setObjectID(jsonArray.getJSONObject(i).getString("ObjectID"));
+	            				contactPersons[i]=contactPerson;
+	                		}
+	            		}
+	                }
+					
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	            
+	            final ContactPerson[] contactPersonsnew=contactPersons;
+	
+	        	mHandler.post(new Runnable() {  
+					public void run() {  
+			            if(contactPersonsnew!=null && contactPersonsnew.length>0)
+			            {
+	    					for(int i=0;i<contactPersonsnew.length;i++)
+	    	            	{
+	    						addPersonIntoView(contactPersonsnew[i]);
+	    	            	}
+			            }
+			            search.setEnabled(true);
+					}	
+				}); 
+        	}
+        	else if (broadCastType.equals("Add"))
+        	{
+        		int status=intent.getIntExtra("Status", -1);
+        		
+        		if(status==0)
+        		{
+        			status
+        		}
+        	}
 		}
 	}
 	@Override
@@ -104,10 +118,10 @@ public class AddPersonActivity extends  BaseActivity  {
 		);
 		
 		// 注册广播接收
-        receiveBroadCast = new ReceiveBroadCast();
+		searchBroadCast = new SearchBroadCast();
         IntentFilter filter = new IntentFilter();
         filter.addAction("SearchPerson");    
-        registerReceiver(receiveBroadCast, filter);
+        registerReceiver(searchBroadCast, filter);
 	}
 	
 	private void addPersonIntoView(final ContactPerson contactPerson)
@@ -128,10 +142,8 @@ public class AddPersonActivity extends  BaseActivity  {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				Intent intent=new Intent();
-				intent.putExtra("ObjectID", contactPerson.getObjectID());
-				intent.putExtra(name, value)
-				intent.setClass(packageContext, cls)
+				
+				CommonVariables.getSendMsg().sendAddPersonRequest(contactPerson.getObjectID(), AddPersonActivity.this);
 			}
 		});
 

@@ -19,7 +19,6 @@ public class CommonFlag {
     private static String f_GroupID="GroupID";
     private static String f_Type="Type";
     private static String f_SearchKey="SearchKey";
-    
 
 
 	public static String getF_IP() {

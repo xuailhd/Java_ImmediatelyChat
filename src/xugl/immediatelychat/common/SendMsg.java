@@ -161,6 +161,9 @@ public class SendMsg implements ISendMsg {
 					e.printStackTrace();
 					intent.putExtra("SearchResult", "No Connect");
 				}
+				
+				intent.putExtra("BroadCastType", "Search");
+				
 				if(type==1)
 				{
 					intent.setAction("SearchPerson"); 
@@ -177,16 +180,16 @@ public class SendMsg implements ISendMsg {
 	
 
 	@Override
-	public void sendAddPersonRequest(String objectID) {
+	public void sendAddPersonRequest(final String objectID,final Context packageContext) {
 		// TODO Auto-generated method stub
 		new Thread(new Runnable(){
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(); 
+				intent.setAction("AddPersonResult"); 
 				try {
 					int charcount;
-					JSONArray jsonArray=null;
 					String retrunStr=null;
 					char[] charbuffer = new char[1024];
 					Socket sockettoServer = new Socket();
@@ -199,62 +202,46 @@ public class SendMsg implements ISendMsg {
 					
 					JSONObject jsonObject = new JSONObject();
 					jsonObject.put(CommonFlag.getF_ObjectID(), CommonVariables.getObjectID());
-					jsonObject.put(CommonFlag.getF_DestinationObjectID() , value)
-					String msg = CommonFlag.getF_MMSVerifyUASearch() + jsonObject.toString();
+					jsonObject.put(CommonFlag.getF_DestinationObjectID() , objectID);
+					jsonObject.put(CommonFlag.getF_MCS_IP(), CommonVariables.getMCSIP());
+					jsonObject.put(CommonFlag.getF_MCS_Port(), CommonVariables.getMCSPort());
+
+					String msg = CommonFlag.getF_MMSVerifyUAAddPerson() + jsonObject.toString();
 					ou.write(msg.getBytes("UTF-8"));
 					ou.flush();
 					
 					BufferedReader bff = new BufferedReader(new InputStreamReader(in,"UTF-8"));
 					charcount=bff.read(charbuffer);
-					
-					if(charcount>0)
-					{
-						jsonArray=new JSONArray();
-					}
-					
-					while(charcount>0)
-					{
-						retrunStr=String.valueOf(charbuffer, 0, charcount);
-						jsonObject=new JSONObject(retrunStr);
-						jsonArray.put(jsonObject);
-						msg=CommonFlag.getF_MMSVerifyUAFBSearch() + jsonObject.getString("ContactDataID");
-						ou.write(msg.getBytes("UTF-8"));
-						ou.flush();
-						charcount=bff.read(charbuffer);
-					}
-					
-					if(jsonArray!=null && jsonArray.length()>0)
-					{
-						intent.putExtra("SearchResult", jsonArray.toString());
-					}
-					else
-					{
-						intent.putExtra("SearchResult", "No Result");
-					}
 					ou.close();
 					in.close();
 					sockettoServer.close();
+					if(charcount>0)
+					{
+						retrunStr=String.valueOf(charbuffer, 0, charcount);
+						jsonObject=new JSONObject(retrunStr);
+						CommonVariables.getContactDataOperate().SaveContactData(CommonVariables.getObjectID(), jsonObject, packageContext);
+						CommonVariables.getChatOperate().AddChat(objectID,jsonObject.getString("ContactPersonName"), packageContext);
+						intent.putExtra("Status", 0);
+					}
+					else
+					{
+						intent.putExtra("Status", 2);
+					}
+					
+					
 				} 
 				catch(JSONException e)
 				{
 					e.printStackTrace();
-					intent.putExtra("SearchResult","No Result");
+					intent.putExtra("Status", 2);
 				}
 				catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-					intent.putExtra("SearchResult", "No Connect");
+					intent.putExtra("Status", 2);
 				}
-				if(type==1)
-				{
-					intent.setAction("SearchPerson"); 
-					packageContext.sendBroadcast(intent); 
-				}
-				else if (type==2)
-				{
-					intent.setAction("SearchGroup");
-					packageContext.sendBroadcast(intent); 
-				}
+				intent.putExtra("BroadCastType", "Add");
+				packageContext.sendBroadcast(intent);
 			}
 		}).start();
 	}
