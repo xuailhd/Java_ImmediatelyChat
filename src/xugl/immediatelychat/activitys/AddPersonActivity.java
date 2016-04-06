@@ -87,7 +87,11 @@ public class AddPersonActivity extends  BaseActivity  {
         		
         		if(status==0)
         		{
-        			status
+        			Intent intent2=new Intent();
+        			intent2.setClass(AddPersonActivity.this, ChatActivity.class);
+        			intent2.putExtra("ChatModel", intent.getParcelableExtra("ChatModel"));
+        			startActivity(intent2);
+        			finish();
         		}
         	}
 		}

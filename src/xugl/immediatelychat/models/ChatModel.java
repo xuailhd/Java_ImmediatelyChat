@@ -1,14 +1,16 @@
 package xugl.immediatelychat.models;
 
-public class ChatModel {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class ChatModel implements Parcelable  {
 	private int chatType;
-	private int groupID;
-	private int DestinationObjectID;
+	private String groupID;
+	private String DestinationObjectID;
 	private String LatestMsg;
 	private String LatestTime;
 	private String groupName;
 	private String contactPersonName;
-	
 	/**
      * 0: single chat, 1: group chat
      */
@@ -18,16 +20,16 @@ public class ChatModel {
 	public void setChatType(int chatType) {
 		this.chatType = chatType;
 	}
-	public int getGroupID() {
+	public String getGroupID() {
 		return groupID;
 	}
-	public void setGroupID(int groupID) {
+	public void setGroupID(String groupID) {
 		this.groupID = groupID;
 	}
-	public int getDestinationObjectID() {
+	public String getDestinationObjectID() {
 		return DestinationObjectID;
 	}
-	public void setDestinationObjectID(int destinationObjectID) {
+	public void setDestinationObjectID(String destinationObjectID) {
 		DestinationObjectID = destinationObjectID;
 	}
 	public String getLatestMsg() {
@@ -54,5 +56,33 @@ public class ChatModel {
 	public void setContactPersonName(String contactPersonName) {
 		this.contactPersonName = contactPersonName;
 	}
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		// TODO Auto-generated method stub
+		dest.writeInt(chatType);
+		dest.writeString(groupID);
+		dest.writeString(DestinationObjectID);
+		dest.writeString(LatestMsg);
+		dest.writeString(LatestTime);
+		dest.writeString(LatestMsg);
+		dest.writeString(groupName);
+		dest.writeString(contactPersonName);
+		
+	}
 	
+//	private ChatModel(Parcel in) {
+//		chatType = in.readInt();
+//		groupID=in.readString();
+//		DestinationObjectID=in.readString();
+//		LatestMsg=in.readString();
+//		LatestTime=in.readString();
+//		LatestMsg=in.readString();
+//		groupName=in.readString();
+//		contactPersonName=in.readString();
+//    }
 }

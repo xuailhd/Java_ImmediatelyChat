@@ -4,6 +4,8 @@ import org.json.JSONArray;
 
 import xugl.immediatelychar.chat.ChatOperate;
 import xugl.immediatelychar.chat.IChatOperate;
+import xugl.immediatelychar.chat.IMsgRecordOperate;
+import xugl.immediatelychar.chat.MsgRecordOperate;
 import xugl.immediatelychat.contactdata.ContactDataOperate;
 import xugl.immediatelychat.contactdata.IContactDataOperate;
 
@@ -54,6 +56,16 @@ public class CommonVariables {
 			sendMsg=new SendMsg();
 		}
 		return sendMsg;
+	}
+	
+	private static IMsgRecordOperate msgRecordOperate;
+	
+	public static IMsgRecordOperate getMsgRecordOperate() {
+		if(msgRecordOperate==null)
+		{
+			msgRecordOperate=new MsgRecordOperate();
+		}
+		return msgRecordOperate;
 	}
 
 	private static String PSIP;
