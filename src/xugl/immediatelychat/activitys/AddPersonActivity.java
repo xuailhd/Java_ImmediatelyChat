@@ -6,10 +6,12 @@ import org.json.JSONException;
 import xugl.immediatelychat.R;
 import xugl.immediatelychat.common.CommonVariables;
 import xugl.immediatelychat.models.ContactPerson;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
@@ -20,7 +22,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class AddPersonActivity extends  BaseActivity  {
+public class AddPersonActivity extends Activity  {
 	private Button search;
 	private EditText searchinput;
 	private LinearLayout searchlayout;
@@ -96,13 +98,21 @@ public class AddPersonActivity extends  BaseActivity  {
         	}
 		}
 	}
+
 	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		setView();
+		init();
+	}
+	
 	protected void setView() {
 		// TODO Auto-generated method stub
 		setContentView(R.layout.activity_findcontact);
 	}
 
-	@Override
+
 	protected void init() {
 		// TODO Auto-generated method stub
 		search=(Button)findViewById(R.id.search);
@@ -153,5 +163,13 @@ public class AddPersonActivity extends  BaseActivity  {
 
 		searchlayout.addView(linearLayout);
 	}
-
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		if(searchBroadCast!=null)
+		{
+			unregisterReceiver(searchBroadCast);
+		}
+		super.onDestroy();
+	}
 }

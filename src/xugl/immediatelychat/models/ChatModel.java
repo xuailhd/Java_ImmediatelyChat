@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 public class ChatModel implements Parcelable  {
 	private int chatType;
+	private String chatID;
 	private String groupID;
 	private String DestinationObjectID;
 	private String LatestMsg;
@@ -12,13 +13,19 @@ public class ChatModel implements Parcelable  {
 	private String groupName;
 	private String contactPersonName;
 	/**
-     * 0: single chat, 1: group chat
+     * 1: single chat, 2: group chat
      */
 	public int getChatType() {
 		return chatType;
 	}
 	public void setChatType(int chatType) {
 		this.chatType = chatType;
+	}
+	public String getChatID() {
+		return chatID;
+	}
+	public void setChatID(String chatID) {
+		this.chatID = chatID;
 	}
 	public String getGroupID() {
 		return groupID;

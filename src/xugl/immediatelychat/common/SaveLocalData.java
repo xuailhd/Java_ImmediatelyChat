@@ -29,7 +29,6 @@ public class SaveLocalData implements ISaveLocalData {
 	public String GetData(String objectID, String fieldName,Context packageContext) {
 		// TODO Auto-generated method stub
 		SharedPreferences settings = packageContext.getSharedPreferences(objectID, Activity.MODE_PRIVATE);  
-		
 		return settings.getString(fieldName, null);
 	}
 
@@ -40,5 +39,7 @@ public class SaveLocalData implements ISaveLocalData {
 		
 		return settings.getString(fieldName, null);
 	}
+	
+	public 
 
 }

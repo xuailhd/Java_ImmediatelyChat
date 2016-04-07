@@ -79,11 +79,9 @@ public class SendMsg implements ISendMsg {
 					CommonVariables.getObjectID());
 			msgObject.put(CommonFlag.getF_Account(),
 					CommonVariables.getAccount());
-			msgObject.put(CommonFlag.getF_Content(), msg);
-			msgObject.put(CommonFlag.getF_RecivedGroupID(),
-					CommonVariables.getGroupID());
+			msgObject.put(CommonFlag.getF_MsgContent(), msg);
 			msgObject.put(CommonFlag.getF_MsgType(), 0);
-			msgObject.put(CommonFlag.getF_SendType(), 1);
+
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -2,12 +2,13 @@ package xugl.immediatelychat.activitys;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
@@ -20,17 +21,16 @@ import android.widget.TextView;
 import xugl.immediatelychat.R;
 import xugl.immediatelychat.common.CommonVariables;
 import xugl.immediatelychat.models.ContactGroup;
-import xugl.immediatelychat.models.ContactPerson;
 
-public class AddGroupActivity extends BaseActivity {
+public class AddGroupActivity extends Activity {
 	private Button search;
 	private EditText searchinput;
 	private LinearLayout searchlayout;
 	private Handler mHandler=new Handler();
-	private ReceiveBroadCast receiveBroadCast;
+	private SearchBroadCast searchBroadCast;
 	
 	
-	private class ReceiveBroadCast extends BroadcastReceiver
+	private class SearchBroadCast extends BroadcastReceiver
 	{
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -81,13 +81,20 @@ public class AddGroupActivity extends BaseActivity {
 			}); 
 		}
 	}
+	
 	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		setView();
+		init();
+	}
+	
 	protected void setView() {
 		// TODO Auto-generated method stub
 		setContentView(R.layout.activity_findcontact);
 	}
 
-	@Override
 	protected void init() {
 		// TODO Auto-generated method stub
 		search=(Button)findViewById(R.id.search);
@@ -107,10 +114,10 @@ public class AddGroupActivity extends BaseActivity {
 		);
 		
 		// ×¢²á¹ã²¥½ÓÊÕ
-        receiveBroadCast = new ReceiveBroadCast();
+		searchBroadCast = new SearchBroadCast();
         IntentFilter filter = new IntentFilter();
         filter.addAction("SearchGroup");    
-        registerReceiver(receiveBroadCast, filter);
+        registerReceiver(searchBroadCast, filter);
 	}
 	
 	private void addGroupIntoView(ContactGroup contactGroup)
@@ -127,15 +134,24 @@ public class AddGroupActivity extends BaseActivity {
 		linearLayout.addView(pic);
 		linearLayout.addView(name);
 		
+//		linearLayout.setOnClickListener(new OnClickListener(){
+//			@Override
+//			public void onClick(View arg0) {
+//				// TODO Auto-generated method stub
+//				
+//				CommonVariables.getSendMsg().sendAddGroupRequest(contactPerson.getObjectID(), AddPersonActivity.this);
+//			}
+//		});
+		
 		searchlayout.addView(linearLayout);
 	}
 
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
-		if(receiveBroadCast!=null)
+		if(searchBroadCast!=null)
 		{
-			unregisterReceiver(receiveBroadCast);
+			unregisterReceiver(searchBroadCast);
 		}
 		super.onDestroy();
 	}

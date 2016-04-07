@@ -50,6 +50,7 @@ public abstract class BaseActivity extends Activity {
 				Intent intent = new Intent();
 				intent.setClass(BaseActivity.this, HomeActivity.class);
 	            startActivity(intent);
+	            finish();
 			}
 		});
 		
@@ -60,6 +61,7 @@ public abstract class BaseActivity extends Activity {
 				Intent intent = new Intent();
 				intent.setClass(BaseActivity.this, PersonsActivity.class);
 	            startActivity(intent);
+	            finish();
 			}
 		});
 		
@@ -70,6 +72,7 @@ public abstract class BaseActivity extends Activity {
 				Intent intent = new Intent();
 				intent.setClass(BaseActivity.this, GroupsActivity.class);
 	            startActivity(intent);
+	            finish();
 			}
 		});
 	}

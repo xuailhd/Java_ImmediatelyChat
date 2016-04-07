@@ -1,26 +1,14 @@
 package xugl.immediatelychat.common;
 
 public class CommonFlag {
+	//common
 	private static String f_IP="IP";
     private static String f_Port = "Port";
     private static String f_ObjectID = "ObjectID";
     private static String f_Account="ObjectName";
     private static String f_Password="PassWord";
-    private static String f_Content = "Content";
-    private static String f_MsgType="MsgType";
-    private static String f_SendType="SendType";
-    private static String f_RecivedGroupID="RecivedGroupID";
-    private static String f_RecivedObjectID = "RecivedObjectID";
-    private static String f_RecivedObjectID2 = "RecivedObjectID2";
-    
-    private static String f_GroupIDs="GroupIDs";
-    private static String f_LatestTime="LatestTime";
-    private static String f_UpdateTime="UpdateTime";
     private static String f_GroupID="GroupID";
-    private static String f_Type="Type";
-    private static String f_SearchKey="SearchKey";
-
-
+    
 	public static String getF_IP() {
 		return f_IP;
 	}
@@ -36,42 +24,63 @@ public class CommonFlag {
 	public static String getF_ObjectID() {
 		return f_ObjectID;
 	}
+	
+	public static String getF_Password() {
+		return f_Password;
+	}
 
-	public static String getF_Content() {
-		return f_Content;
+	public static String getF_GroupID() {
+		return f_GroupID;
+	}
+    
+	//MSG
+	private static String f_MsgID="MsgID";
+	private static String f_MsgSenderObjectID="MsgSenderObjectID";
+	private static String f_MsgSenderName="MsgSenderName";
+	private static String f_MsgContent="MsgContent";
+    private static String f_MsgRecipientObjectID="MsgRecipientObjectID";
+    private static String f_MsgRecipientGroupID="MsgRecipientGroupID";
+    private static String f_MsgType="MsgType";
+    private static String f_SendTime = "SendTime";
+    
+	public static String getF_MsgID() {
+		return f_MsgID;
+	}
+
+	public static String getF_MsgSenderObjectID() {
+		return f_MsgSenderObjectID;
+	}
+
+	public static String getF_MsgSenderName() {
+		return f_MsgSenderName;
+	}
+
+	public static String getF_MsgContent() {
+		return f_MsgContent;
+	}
+
+	public static String getF_MsgRecipientObjectID() {
+		return f_MsgRecipientObjectID;
+	}
+
+	public static String getF_MsgRecipientGroupID() {
+		return f_MsgRecipientGroupID;
 	}
 
 	public static String getF_MsgType() {
 		return f_MsgType;
 	}
 
-	public static String getF_SendType() {
-		return f_SendType;
+	public static String getF_SendTime() {
+		return f_SendTime;
 	}
 
-	public static String getF_RecivedGroupID() {
-		return f_RecivedGroupID;
-	}
 
-	public static String getF_RecivedObjectID() {
-		return f_RecivedObjectID;
-	}
-
-	public static String getF_RecivedObjectID2() {
-		return f_RecivedObjectID2;
-	}
-
-	public static String getF_Password() {
-		return f_Password;
-	}
-
-	public static void setF_Password(String f_Password) {
-		CommonFlag.f_Password = f_Password;
-	}
- 
-	public static String getF_GroupIDs() {
-		return f_GroupIDs;
-	}
+	//business
+    private static String f_LatestTime="LatestTime";
+    private static String f_UpdateTime="UpdateTime";
+    private static String f_Type="Type";
+    private static String f_SearchKey="SearchKey";
 
 	public static String getF_LatestTime() {
 		return f_LatestTime;
@@ -79,10 +88,6 @@ public class CommonFlag {
 	
 	public static String getF_UpdateTime() {
 		return f_UpdateTime;
-	}
-
-	public static String getF_GroupID() {
-		return f_GroupID;
 	}
 	
 	public static String getF_Type() {
@@ -93,7 +98,7 @@ public class CommonFlag {
 		return f_SearchKey;
 	}
 
-
+	//Verify Flag
 	private static String f_MMSVerifyUA="VerifyUA";
 	private static String f_MMSVerifyUAGetUAInfo = "MMSVerifyUAGetUAInfo";
 	private static String f_MMSVerifyFBUAGetUAInfo="MMSVerifyFBUAGetUAInfo";
@@ -151,6 +156,7 @@ public class CommonFlag {
 		return f_MCSReciveUAMSGFB;
 	}
 	
+	//client model
     private static String f_DestinationObjectID="DestinationObjectID";
     private static String f_MCS_IP="MCS_IP";
     private static String f_MCS_Port="MCS_Port";
