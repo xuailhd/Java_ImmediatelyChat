@@ -96,7 +96,7 @@ public class LoginActivity extends Activity {
 					CommonVariables.setMMSPort(Integer.parseInt(resultjsonObject.getString("Port")));
 					CommonVariables.setObjectID(resultjsonObject.getString("ObjectID"));
 					CommonVariables.setAccount(account.getText().toString());
-					CommonVariables.setGroupID("Group1");
+//					CommonVariables.setGroupID("Group1");
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

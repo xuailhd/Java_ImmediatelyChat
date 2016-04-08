@@ -105,11 +105,9 @@ public class ReciveMsgService extends Service {
 			OutputStream ou = null;
 			InputStream in = null;
 			JSONObject jsonObject = null;
-			JSONArray jsonArray = null;
 			Intent intent = null;
 			String message = null;
 			String reciverid = null;
-			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 			int i = 0;
 			
 			while (isGoonRunning) {
@@ -125,13 +123,9 @@ public class ReciveMsgService extends Service {
 					in = sockettoServer.getInputStream();
 
 					jsonObject = new JSONObject();
-					jsonObject.put(CommonFlag.getF_ObjectID(),
-							CommonVariables.getObjectID());
-					jsonArray = new JSONArray();
-					jsonArray.put(CommonVariables.getGroupID());
-					jsonObject.put(CommonFlag.getF_GroupIDs(), jsonArray);
-					jsonObject.put(CommonFlag.getF_LatestTime(),
-							df.format(CommonVariables.getLatestTime()));
+					jsonObject.put(CommonFlag.getF_ObjectID(),CommonVariables.getObjectID());
+					jsonObject.put(CommonFlag.getF_LatestTime(),CommonVariables.getLatestTime());
+					jsonObject.put(CommonFlag.getF_GroupIDs(), CommonVariables.getGroupIDs());
 
 					String msg = CommonFlag.getF_MCSVerifyUAGetMSG()
 							+ jsonObject.toString();
@@ -144,13 +138,12 @@ public class ReciveMsgService extends Service {
 					charcount = bff.read(charbuffer);
 //					Log.e("Test", "Get Message charcount:" + charcount);
 					while (charcount > 0) {
-						intent = new Intent(); // Itent就是我们要发送的内容
+						intent = new Intent(); 
 
 						message = String.valueOf(charbuffer, 0, charcount);
 
 						jsonObject = new JSONObject(message);
-						reciverid = jsonObject.getString(CommonFlag
-								.getF_GroupID());
+						reciverid = jsonObject.getString(CommonFlag.getF_GroupID());
 
 						if (jsonObject.getString("LatestTime").compareTo(CommonVariables.getLatestTime())> 0) 
 						{

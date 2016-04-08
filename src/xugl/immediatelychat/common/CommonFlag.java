@@ -8,6 +8,7 @@ public class CommonFlag {
     private static String f_Account="ObjectName";
     private static String f_Password="PassWord";
     private static String f_GroupID="GroupID";
+    private static String f_GroupIDs="GroupIDs";
     
 	public static String getF_IP() {
 		return f_IP;
@@ -33,6 +34,10 @@ public class CommonFlag {
 		return f_GroupID;
 	}
     
+	public static String getF_GroupIDs() {
+		return f_GroupIDs;
+	}
+
 	//MSG
 	private static String f_MsgID="MsgID";
 	private static String f_MsgSenderObjectID="MsgSenderObjectID";

@@ -1,5 +1,7 @@
 package xugl.immediatelychat.common;
 
+import java.util.ArrayList;
+
 import org.json.JSONArray;
 
 import xugl.immediatelychar.chat.ChatOperate;
@@ -79,7 +81,7 @@ public class CommonVariables {
 	private static String objectID;
 	private static String account;
 	private static String password;
-	private static String groupID;
+	private static ArrayList<String> groupIDs;
 	
 	public static String getPSIP() {
 		return PSIP;
@@ -135,11 +137,15 @@ public class CommonVariables {
 	public static void setPassword(String password) {
 		CommonVariables.password = password;
 	}
-	public static String getGroupID() {
-		return groupID;
+	public static ArrayList<String> getGroupIDs() {
+		if(groupIDs==null)
+		{
+			groupIDs=new ArrayList<String>();
+		}
+		return groupIDs;
 	}
-	public static void setGroupID(String groupID) {
-		CommonVariables.groupID = groupID;
+	public static void setGroupIDs(ArrayList<String> groupIDs) {
+		CommonVariables.groupIDs = groupIDs;
 	}
 	
 	private static String latestTime;

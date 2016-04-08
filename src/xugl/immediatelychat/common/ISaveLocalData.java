@@ -1,5 +1,7 @@
 package xugl.immediatelychat.common;
 
+import java.util.Map;
+
 import android.content.Context;
 
 public interface ISaveLocalData {
@@ -10,4 +12,6 @@ public interface ISaveLocalData {
 	String GetData(String objectID,String fieldName,Context packageContext);
 	
 	String GetData(String fieldName,Context packageContext);
+	
+	Map<String, ?> GetAllData(String fieldName,Context packageContext);
 }

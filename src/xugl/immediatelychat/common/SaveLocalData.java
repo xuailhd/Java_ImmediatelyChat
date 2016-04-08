@@ -1,5 +1,11 @@
 package xugl.immediatelychat.common;
 
+import java.util.Iterator;
+import java.util.Map;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -36,10 +42,13 @@ public class SaveLocalData implements ISaveLocalData {
 	public String GetData(String fieldName,Context packageContext) {
 		// TODO Auto-generated method stub
 		SharedPreferences settings = packageContext.getSharedPreferences(commonFileName, Activity.MODE_PRIVATE);  
-		
 		return settings.getString(fieldName, null);
 	}
-	
-	public 
 
+	@Override
+	public Map<String, ?> GetAllData(String fieldName, Context packageContext) {
+		// TODO Auto-generated method stub
+		SharedPreferences settings = packageContext.getSharedPreferences(commonFileName, Activity.MODE_PRIVATE);  
+		return settings.getAll();
+	}
 }

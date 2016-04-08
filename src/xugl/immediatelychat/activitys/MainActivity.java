@@ -65,7 +65,7 @@ public class MainActivity extends Activity {
             
             try {
 				msgjson=new JSONObject(message);
-				msgcontent=msgjson.getString(CommonFlag.getF_Content());
+//				msgcontent=msgjson.getString(CommonFlag.getF_Content());
 				account=msgjson.getString(CommonFlag.getF_Account());
 				objectID=msgjson.getString(CommonFlag.getF_ObjectID());
 			} catch (JSONException e) {
@@ -135,7 +135,7 @@ public class MainActivity extends Activity {
 		// 注册广播接收
         receiveBroadCast = new ReceiveBroadCast();
         IntentFilter filter = new IntentFilter();
-        filter.addAction(CommonVariables.getGroupID());    //只有持有相同的action的接受者才能接收此广播
+//        filter.addAction(CommonVariables.getGroupID());    //只有持有相同的action的接受者才能接收此广播
         registerReceiver(receiveBroadCast, filter);
 		
 		button.setOnClickListener(new OnClickListener(){

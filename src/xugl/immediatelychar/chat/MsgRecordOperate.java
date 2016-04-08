@@ -1,6 +1,9 @@
 package xugl.immediatelychar.chat;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,17 +20,39 @@ public class MsgRecordOperate implements IMsgRecordOperate {
 	public ArrayList<MsgRecord> GetMsgRecord(int chatType,String chatID,Context packageContext) {
 		// TODO Auto-generated method stub
 		JSONObject jsonObject = null;
-		JSONArray jsonArray=null;
-		String localDataStr=null;
+		ArrayList<MsgRecord> msgRecords= null;
+		MsgRecord msgRecord = null;
 		try {
-			localDataStr=CommonVariables.getLocalDataManager().GetData(objectID, "ContactPersonLists", packageContext);
+			Map<String, ?> map=CommonVariables.getLocalDataManager().GetAllData("MSG" + chatID,packageContext);
+			if(map!=null)
+			{				
+				msgRecords = new ArrayList<MsgRecord>();
+				Iterator iter = map.entrySet().iterator();  
+			    while (iter.hasNext()) {  
+			        Map.Entry entry = (Map.Entry) iter.next();   
+			        String val = (String) entry.getValue();
+			        jsonObject = new JSONObject(val);
+			        msgRecord = new MsgRecord();
+			        msgRecord.setMsgContent(jsonObject.getString("MsgContent"));
+			        msgRecord.setMsgID(jsonObject.getString("MsgID"));
+			        msgRecord.setMsgRecipientGroupID(jsonObject.getString("MsgRecipientGroupID"));
+			        msgRecord.setMsgRecipientObjectID(jsonObject.getString("MsgRecipientObjectID"));
+			        msgRecord.setMsgSenderName(jsonObject.getString("MsgSenderName"));
+			        msgRecord.setMsgSenderObjectID(jsonObject.getString("MsgSenderObjectID"));
+			        msgRecord.setMsgType(jsonObject.getInt("MsgType"));
+			        msgRecord.setSendTime(jsonObject.getString("SendTime"));
+			        msgRecords.add(msgRecord);
+			    }
+			}
+			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		return null;
+		return msgRecords;
 	}
+
 
 	@Override
 	public void SaveMsgRecord(MsgRecord msgRecord,String chatID, Context packageContext) {
