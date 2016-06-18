@@ -11,6 +11,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import xugl.immediatelychat.R;
 import xugl.immediatelychat.common.CommonVariables;
+import xugl.immediatelychat.models.ChatModel;
 import xugl.immediatelychat.models.ContactPersonList;
 
 public class PersonsActivity extends BaseActivity {
@@ -55,7 +56,7 @@ public class PersonsActivity extends BaseActivity {
 	}
 	
 	
-	private void addPersonIntoView(ContactPersonList contactPersonList)
+	private void addPersonIntoView(final ContactPersonList contactPersonList)
 	{
 		ImageView pic=new ImageView(PersonsActivity.this);
 		pic.setImageResource(R.drawable.ic_launcher);
@@ -69,6 +70,19 @@ public class PersonsActivity extends BaseActivity {
 		linearLayout.addView(pic);
 		linearLayout.addView(name);
 		
+		linearLayout.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				ChatModel chatModel = CommonVariables.getChatOperate().SetChat(contactPersonList.getDestinationObjectID(), 
+						contactPersonList.getContactPersonName(), 1, PersonsActivity.this);
+				
+				Intent intent=new Intent();
+				intent.putExtra("ChatModel", chatModel);
+				intent.setClass(PersonsActivity.this, ChatActivity.class);
+				startActivity(intent);
+			}});
 
 		mainLayout.addView(linearLayout);
 	}

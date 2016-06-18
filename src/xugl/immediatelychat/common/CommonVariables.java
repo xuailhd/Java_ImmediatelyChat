@@ -1,5 +1,6 @@
 package xugl.immediatelychat.common;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -10,12 +11,41 @@ import xugl.immediatelychar.chat.IMsgRecordOperate;
 import xugl.immediatelychar.chat.MsgRecordOperate;
 import xugl.immediatelychat.contactdata.ContactDataOperate;
 import xugl.immediatelychat.contactdata.IContactDataOperate;
+import xugl.immediatelychat.models.MsgRecord;
 
 public class CommonVariables {
-	private static String dateFormat="yyyy-MM-dd HH:mm:ss.SSS";
+	private static int baseActivityCount = 0;
 	
-	public static String getDateFormat() {
-		return dateFormat;
+	public static int getBaseActivityCount() {
+		return baseActivityCount;
+	}
+	public static void setBaseActivityCount(int baseActivityCount) {
+		CommonVariables.baseActivityCount = baseActivityCount;
+	}
+
+	private static String dateFormat="yyyy-MM-dd HH:mm:ss.SSS";
+	private static String dateFormat2="yyyy-MM-dd HH:mm:ss";
+	
+	public static String getDateFormat2() {
+		return dateFormat2;
+	}
+
+	private static SimpleDateFormat simpleDateFormat;
+	private static SimpleDateFormat simpleDateFormat2;
+	public static SimpleDateFormat getSimpleDateFormat() {
+		if(simpleDateFormat==null)
+		{
+			simpleDateFormat = new SimpleDateFormat(dateFormat);
+		}
+		return simpleDateFormat;
+	}
+	
+	public static SimpleDateFormat getSimpleDateFormat2() {
+		if(simpleDateFormat2==null)
+		{
+			simpleDateFormat2 = new SimpleDateFormat(dateFormat2);
+		}
+		return simpleDateFormat2;
 	}
 	
 	private static String minDate="1900-01-01 00:00:00.000";
@@ -165,15 +195,15 @@ public class CommonVariables {
 	public static void setUpdateTime(String updateTime) {
 		CommonVariables.updateTime = updateTime;
 	}
+	
+	private static ArrayList<MsgRecord> msgRecordBuffer;
 
-	private static JSONArray jsonMsgArray;
-
-	public static JSONArray getJsonMsgArray() {
-		if(jsonMsgArray==null)
+	public static ArrayList<MsgRecord> getMsgRecordBuffer() {
+		if(msgRecordBuffer==null)
 		{
-			jsonMsgArray=new JSONArray();
+			msgRecordBuffer = new ArrayList<MsgRecord>();
 		}
-		return jsonMsgArray;
+		return msgRecordBuffer;
 	}
-
+	
 }

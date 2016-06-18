@@ -8,9 +8,13 @@ import android.content.Context;
 import xugl.immediatelychat.models.MsgRecord;
 
 public interface IMsgRecordOperate {
-	ArrayList<MsgRecord> GetMsgRecord(int chatType,String chatObjectID,Context packageContext);
+	ArrayList<MsgRecord> GetMsgRecord(String chatID,Context packageContext);
 	
-	void SaveMsgRecord(MsgRecord msgRecord,String chatID,Context packageContext);
+	void SaveMsgRecord(MsgRecord msgRecord,Context packageContext);
 	
 	MsgRecord SaveMsgRecord(JSONObject msgRecord,String chatID,Context packageContext);
+	
+//	String SaveMsgRecord(JSONObject msgRecord,Context packageContext);
+	
+	void UpdateIsSend(String msgID, String chatID,Context packageContext);
 }

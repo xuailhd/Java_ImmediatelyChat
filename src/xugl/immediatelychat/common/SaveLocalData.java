@@ -1,14 +1,9 @@
 package xugl.immediatelychat.common;
 
-import java.util.Iterator;
 import java.util.Map;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.SharedPreferences;
 
 public class SaveLocalData implements ISaveLocalData {
@@ -23,18 +18,18 @@ public class SaveLocalData implements ISaveLocalData {
 	}
 
 	@Override
-	public void SaveData(String objectID, String fieldName, String fieldValue,Context packageContext) {
+	public void SaveData(String filename, String fieldName, String fieldValue,Context packageContext) {
 		// TODO Auto-generated method stub
-		SharedPreferences settings = packageContext.getSharedPreferences(objectID, Activity.MODE_PRIVATE);  
+		SharedPreferences settings = packageContext.getSharedPreferences(filename, Activity.MODE_PRIVATE);  
 		SharedPreferences.Editor editor = settings.edit();  
 		editor.putString(fieldName,fieldValue); 
 		editor.commit();
 	}
 
 	@Override
-	public String GetData(String objectID, String fieldName,Context packageContext) {
+	public String GetData(String filename, String fieldName,Context packageContext) {
 		// TODO Auto-generated method stub
-		SharedPreferences settings = packageContext.getSharedPreferences(objectID, Activity.MODE_PRIVATE);  
+		SharedPreferences settings = packageContext.getSharedPreferences(filename, Activity.MODE_PRIVATE);  
 		return settings.getString(fieldName, null);
 	}
 
@@ -46,9 +41,52 @@ public class SaveLocalData implements ISaveLocalData {
 	}
 
 	@Override
-	public Map<String, ?> GetAllData(String fieldName, Context packageContext) {
+	public Map<String, ?> GetAllData(String filename, Context packageContext) {
+		// TODO Auto-generated method stub
+		SharedPreferences settings = packageContext.getSharedPreferences(filename, Activity.MODE_PRIVATE);  
+		return settings.getAll();
+	}
+
+	@Override
+	public void DeleteData(String fieldName, Context packageContext) {
 		// TODO Auto-generated method stub
 		SharedPreferences settings = packageContext.getSharedPreferences(commonFileName, Activity.MODE_PRIVATE);  
-		return settings.getAll();
+		SharedPreferences.Editor editor = settings.edit();  
+		editor.remove(fieldName);
+		editor.commit();
+	}
+
+	@Override
+	public void DeleteData(String filename, String fieldName,
+			Context packageContext) {
+		// TODO Auto-generated method stub
+		SharedPreferences settings = packageContext.getSharedPreferences(filename, Activity.MODE_PRIVATE);  
+		SharedPreferences.Editor editor = settings.edit();  
+		editor.remove(fieldName);
+		editor.commit();
+	}
+
+	@Override
+	public String FindData(String filename, String fieldName,
+			Context packageContext) {
+		// TODO Auto-generated method stub
+		SharedPreferences settings = packageContext.getSharedPreferences(filename, Activity.MODE_PRIVATE);  
+		return settings.getString(fieldName, null);
+	}
+
+	@Override
+	public String FindData(String fieldName, Context packageContext) {
+		// TODO Auto-generated method stub
+		SharedPreferences settings = packageContext.getSharedPreferences(commonFileName, Activity.MODE_PRIVATE);  
+		return settings.getString(fieldName, null);
+	}
+
+	@Override
+	public void DeleteFile(String filename, Context packageContext) {
+		// TODO Auto-generated method stub
+		SharedPreferences settings = packageContext.getSharedPreferences(filename, Activity.MODE_PRIVATE);  
+		SharedPreferences.Editor editor = settings.edit();  
+		editor.clear();
+		editor.commit();
 	}
 }

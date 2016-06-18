@@ -114,7 +114,7 @@ public class CommonFlag {
 	private static String f_MCSVerifyUA="VerifyAccount";
 	private static String f_MCSVerifyUAMSG = "VerifyMSG";
     private static String f_MCSVerifyUAGetMSG = "VerifyGetMSG";
-    private static String f_MCSReciveUAMSGFB = "VerifyMSGFB";
+    private static String f_MCSReciveUAMSGFB = "VerifyFBMSG";
     
 
 	public static String getF_MMSVerifyUA() {

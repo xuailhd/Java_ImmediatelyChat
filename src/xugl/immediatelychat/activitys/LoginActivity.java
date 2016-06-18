@@ -1,12 +1,9 @@
 package xugl.immediatelychat.activitys;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import xugl.immediatelychat.R;
 import xugl.immediatelychat.common.CommonVariables;
-import xugl.immediatelychat.common.ISendMsg;
-import xugl.immediatelychat.common.SendMsg;
+import xugl.immediatelychat.common.ConnectServer;
+import xugl.immediatelychat.common.IConnectServer;
 import xugl.immediatelychat.services.ReciveMsgService;
 import android.content.BroadcastReceiver;
 import android.app.Activity;
@@ -15,7 +12,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -42,9 +38,9 @@ public class LoginActivity extends Activity {
         	//得到广播中得到的数据，并显示出来
             final String message = intent.getStringExtra("MSG");
             if(message.equals("Success"))
-            {
-            	
-            	//startService(new Intent().setClass(LoginActivity.this, ReciveMsgService.class));
+            {	
+//            	CommonVariables.getChatOperate().CleanChats(LoginActivity.this);
+            	startService(new Intent().setClass(LoginActivity.this, ReciveMsgService.class));
             	
             	Intent intent2 = new Intent();
             	intent2.setClass(LoginActivity.this, HomeActivity.class);
@@ -82,45 +78,7 @@ public class LoginActivity extends Activity {
 		
 		setContentView(R.layout.login_activity);
 		
-		mHandler=new Handler(){
-
-			@Override
-			public void handleMessage(Message msg) {
-				// TODO Auto-generated method stub
-				super.handleMessage(msg);
-				Bundle data = msg.getData();  
-				JSONObject resultjsonObject=null;
-				try {
-					resultjsonObject=new JSONObject(data.getString("data"));
-					CommonVariables.setMMSIP(resultjsonObject.getString("IP"));
-					CommonVariables.setMMSPort(Integer.parseInt(resultjsonObject.getString("Port")));
-					CommonVariables.setObjectID(resultjsonObject.getString("ObjectID"));
-					CommonVariables.setAccount(account.getText().toString());
-//					CommonVariables.setGroupID("Group1");
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					
-				}
-				
-				if(resultjsonObject!=null)
-				{
-					if(CommonVariables.getObjectID()==null)
-					{
-						errorMsg.setText(R.string.accountsame);
-						return;
-					}
-					startService(new Intent(LoginActivity.this,ReciveMsgService.class));
-				}
-				else
-				{
-					errorMsg.setText(R.string.servererror);
-				}
-
-			}
-			
-		};
-		
+		mHandler = new Handler();
 		
 		// 注册广播接收
         receiveBroadCast = new ReceiveBroadCast();
@@ -149,7 +107,7 @@ public class LoginActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				
-				ISendMsg sendMsg=new SendMsg();
+				IConnectServer connectServer=new ConnectServer();
 				
 				//存储本地配置文件
 				SharedPreferences settings = getSharedPreferences("PSConfig", Activity.MODE_PRIVATE);  
@@ -162,13 +120,21 @@ public class LoginActivity extends Activity {
 				
 				CommonVariables.setPSIP(serverIP.getText().toString());
 				CommonVariables.setPSPort(Integer.parseInt(serverPort.getText().toString()) );
-				sendMsg.postAccount(account.getText().toString(),password.getText().toString(),LoginActivity.this);
+				connectServer.postAccount(account.getText().toString(),password.getText().toString(),LoginActivity.this);
 				
 				errorMsg.setText(R.string.conneting);
 				
 			}
 			
 		});
+		
+		cancel.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				finish();
+			}});
 		
 	}
 	

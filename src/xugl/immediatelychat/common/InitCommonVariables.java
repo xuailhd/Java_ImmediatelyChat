@@ -1,6 +1,5 @@
 package xugl.immediatelychat.common;
 
-import android.util.Log;
 
 public class InitCommonVariables {
 	public void Init(String ip)

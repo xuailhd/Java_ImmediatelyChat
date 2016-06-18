@@ -175,7 +175,7 @@ public class MainActivity extends Activity {
 					chatLayout.addView(linearLayout2);
 					
 					scrollView.fullScroll(ScrollView.FOCUS_DOWN);  
-					sendMsg.doSend(text);
+					//sendMsg.doSend(text);
 				}
 			}});
 		}catch (Exception e) {

@@ -146,12 +146,19 @@ public class ContactDataOperate implements IContactDataOperate {
 				CommonVariables.getLocalDataManager().SaveData(objectID,"ContactGroupSubs", jsonArray.toString(), packageContext);
 			}
 			
-			
-			localDataStr=CommonVariables.getLocalDataManager().GetData(objectID, "ContactPerson", packageContext);
-			jsonObject=new JSONObject(localDataStr);
-			
-			if(contactData.getString("UpdateTime").compareToIgnoreCase(jsonObject.getString("UpdateTime"))>0)
+			if(contactData.getInt("DataType")==0)
 			{
+				localDataStr=CommonVariables.getLocalDataManager().GetData(objectID, "ContactPerson", packageContext);
+
+				if(localDataStr==null)
+				{
+					jsonObject=new JSONObject();
+				}
+				else
+				{
+					jsonObject=new JSONObject(localDataStr);
+				}
+				
 				jsonObject.put("UpdateTime",  contactData.getString("UpdateTime"));
 				CommonVariables.getLocalDataManager().SaveData(objectID,"ContactPerson", jsonObject.toString(), packageContext);
 				CommonVariables.setUpdateTime(contactData.getString("UpdateTime"));
@@ -222,9 +229,6 @@ public class ContactDataOperate implements IContactDataOperate {
 			{
 				return contactGroups;
 			}
-			
-			Log.e("Test", localDataStr);
-			
 			jsonArray=new JSONArray(localDataStr);
 			
 			contactGroups=new ContactGroup[jsonArray.length()];
@@ -294,6 +298,7 @@ public class ContactDataOperate implements IContactDataOperate {
 			
 			if(localDataStr==null)
 			{
+				Log.e("Test", "not contactPerson info");
 				jsonObject=new JSONObject();
 				jsonObject.put("UpdateTime", CommonVariables.getMinDate());
 				jsonObject.put("LatestTime", CommonVariables.getMinDate());
@@ -306,6 +311,96 @@ public class ContactDataOperate implements IContactDataOperate {
 			
 			CommonVariables.setUpdateTime(jsonObject.getString("UpdateTime"));
 			CommonVariables.setLatestTime(jsonObject.getString("LatestTime"));
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		localDataStr=null;
+		jsonObject=null;
+	}
+
+	@Override
+	public String GetContactGroupname(String objectID, String groupID,
+			Context packageContext) {
+		// TODO Auto-generated method stub
+		String localDataStr=null;
+		JSONArray jsonArray=null;
+		String groupName = null;
+		int i=0;
+		try {
+			localDataStr=CommonVariables.getLocalDataManager().GetData(objectID, "ContactGroups", packageContext);
+
+			if(localDataStr==null)
+			{
+				return null;
+			}
+			
+			jsonArray=new JSONArray(localDataStr);
+
+			while(i<jsonArray.length())
+			{
+				if(groupID.equalsIgnoreCase(jsonArray.getJSONObject(i).getString("GroupObjectID")))
+				{
+					groupName = jsonArray.getJSONObject(i).getString("GroupName");
+					localDataStr=null;
+					jsonArray=null;
+					return groupName;
+				}
+				i++;
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		localDataStr=null;
+		jsonArray=null;
+		return null;
+	}
+
+	@Override
+	public void UpdateLatestTime(String objectID, String latestTime, Context packageContext) {
+		// TODO Auto-generated method stub
+		String localDataStr=null;
+		JSONObject jsonObject=null;
+		try {
+			localDataStr=CommonVariables.getLocalDataManager().GetData(objectID, "ContactPerson", packageContext);
+			
+			if(localDataStr==null)
+			{
+				jsonObject=new JSONObject();				
+			}
+			else
+			{
+				jsonObject=new JSONObject(localDataStr);
+			}
+			
+			jsonObject.put("LatestTime", latestTime);
+			
+			CommonVariables.getLocalDataManager().SaveData(objectID, "ContactPerson",jsonObject.toString(), packageContext);
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		localDataStr=null;
+		jsonObject=null;
+	}
+
+	@Override
+	public void CleanPersonInfo(String objectID, Context packageContext) {
+		// TODO Auto-generated method stub
+		String localDataStr=null;
+		JSONObject jsonObject=null;
+		try {
+			localDataStr=CommonVariables.getLocalDataManager().GetData(objectID, "ContactPerson", packageContext);
+			
+			if(localDataStr!=null)
+			{
+				jsonObject=new JSONObject(localDataStr);
+				jsonObject.put("LatestTime", CommonVariables.getMinDate());
+				CommonVariables.getLocalDataManager().SaveData(objectID, "ContactPerson",jsonObject.toString(), packageContext);
+			}
 			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block

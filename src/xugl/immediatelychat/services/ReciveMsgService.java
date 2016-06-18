@@ -5,26 +5,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
-import java.net.UnknownHostException;
-import java.sql.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Random;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import xugl.immediatelychat.common.CommonFlag;
 import xugl.immediatelychat.common.CommonVariables;
-import xugl.immediatelychat.common.IUpdateChatContent;
-import xugl.immediatelychat.models.ClientStatusModel;
-import android.R.integer;
+import xugl.immediatelychat.models.ChatModel;
+import xugl.immediatelychat.models.MsgRecord;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
@@ -34,7 +24,9 @@ import android.util.Log;
 public class ReciveMsgService extends Service {
 
 	private ReciveMsgThread reciveMsgThread;
-	private static final String TAG = "ReciveMsgService";
+	private SendMsgThread sendMsgThread;
+
+	// private static final String TAG = "ReciveMsgService";
 
 	@Override
 	public IBinder onBind(Intent arg0) {
@@ -50,6 +42,8 @@ public class ReciveMsgService extends Service {
 		reciveMsgThread = new ReciveMsgThread();
 		reciveMsgThread.start();
 
+		sendMsgThread = new SendMsgThread();
+		sendMsgThread.start();
 		return 1;
 
 	}
@@ -71,7 +65,7 @@ public class ReciveMsgService extends Service {
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		reciveMsgThread.setGoonRunning(false);
-
+		sendMsgThread.setGoonRunning(false);
 		Log.e("Test", "ReciveMsgService Destroyed");
 	}
 
@@ -105,82 +99,221 @@ public class ReciveMsgService extends Service {
 			OutputStream ou = null;
 			InputStream in = null;
 			JSONObject jsonObject = null;
-			Intent intent = null;
 			String message = null;
-			String reciverid = null;
+			ChatModel chatModel = null;
+			MsgRecord msgRecord = null;
+			Intent intent = null;
 			int i = 0;
-			
-			while (isGoonRunning) {
-				try {
-					i++;
-					Log.e(TAG, "Begin the " + i + "st get");
-					sockettoServer = new Socket();
-					sockettoServer.connect(
-							new InetSocketAddress(CommonVariables.getMCSIP(),
-									CommonVariables.getMCSPort()), 5000);
+			try {
+				while (isGoonRunning) {
+					try {
+						i++;
+						sockettoServer = new Socket();
+						sockettoServer.connect(
+								new InetSocketAddress(CommonVariables
+										.getMCSIP(), CommonVariables
+										.getMCSPort()), 5000);
 
-					ou = sockettoServer.getOutputStream();
-					in = sockettoServer.getInputStream();
+						ou = sockettoServer.getOutputStream();
+						in = sockettoServer.getInputStream();
 
-					jsonObject = new JSONObject();
-					jsonObject.put(CommonFlag.getF_ObjectID(),CommonVariables.getObjectID());
-					jsonObject.put(CommonFlag.getF_LatestTime(),CommonVariables.getLatestTime());
-					jsonObject.put(CommonFlag.getF_GroupIDs(), CommonVariables.getGroupIDs());
+						jsonObject = new JSONObject();
+						jsonObject.put(CommonFlag.getF_ObjectID(),
+								CommonVariables.getObjectID());
+						jsonObject.put(CommonFlag.getF_LatestTime(),
+								CommonVariables.getLatestTime());
+						String msg = CommonFlag.getF_MCSVerifyUAGetMSG()
+								+ jsonObject.toString();
 
-					String msg = CommonFlag.getF_MCSVerifyUAGetMSG()
-							+ jsonObject.toString();
+						ou.write(msg.getBytes("UTF-8"));
+						ou.flush();
 
-					ou.write(msg.getBytes("UTF-8"));
-					ou.flush();
-
-					BufferedReader bff = new BufferedReader(
-							new InputStreamReader(in, "UTF-8"));
-					charcount = bff.read(charbuffer);
-//					Log.e("Test", "Get Message charcount:" + charcount);
-					while (charcount > 0) {
-						intent = new Intent(); 
-
-						message = String.valueOf(charbuffer, 0, charcount);
-
-						jsonObject = new JSONObject(message);
-						reciverid = jsonObject.getString(CommonFlag.getF_GroupID());
-
-						if (jsonObject.getString("LatestTime").compareTo(CommonVariables.getLatestTime())> 0) 
-						{
-							CommonVariables.setLatestTime(jsonObject.getString("LatestTime"));
-						}
-
-						intent.putExtra("MSG", message);
-						intent.setAction(reciverid); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
-						sendBroadcast(intent); // 发送广播
-
+						BufferedReader bff = new BufferedReader(
+								new InputStreamReader(in, "UTF-8"));
 						charcount = bff.read(charbuffer);
+
+						while (charcount > 0) {
+							msgRecord = null;
+							message = String.valueOf(charbuffer, 0, charcount);
+							jsonObject = new JSONObject(message);
+
+							chatModel = CommonVariables.getChatOperate()
+									.SetChat(jsonObject, ReciveMsgService.this);
+
+							msgRecord = CommonVariables.getMsgRecordOperate()
+									.SaveMsgRecord(jsonObject,
+											chatModel.getChatID(),
+											ReciveMsgService.this);
+
+							if (msgRecord == null) {
+								break;
+							}
+
+							if (jsonObject
+									.getString(CommonFlag.getF_SendTime())
+									.compareTo(CommonVariables.getLatestTime()) > 0) {
+								CommonVariables.setLatestTime(jsonObject
+										.getString(CommonFlag.getF_SendTime()));
+								CommonVariables.getContactDataOperate()
+										.UpdateLatestTime(
+												CommonVariables.getObjectID(),
+												jsonObject.getString(CommonFlag
+														.getF_SendTime()),
+												ReciveMsgService.this);
+							}
+
+							// 通知 chatActivity
+							intent = new Intent();
+							intent.putExtra("MsgRecord", msgRecord);
+							intent.setAction(chatModel.getChatID()); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
+							sendBroadcast(intent); // 发送广播
+
+							msg = CommonFlag.getF_MCSReciveUAMSGFB()
+									+ msgRecord.getMsgID();
+							ou.write(msg.getBytes("UTF-8"));
+							ou.flush();
+
+							charcount = bff.read(charbuffer);
+						}
+						if (msgRecord != null) {
+							// 通知HomeActivity
+							intent = new Intent();
+							intent.putExtra("Msg", "NewMsg");
+							intent.setAction(CommonVariables.getObjectID()
+									+ "Home"); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
+							sendBroadcast(intent); // 发送广播
+						}
+						ou.close();
+						in.close();
+						sockettoServer.close();
+						sockettoServer = null;
+						Thread.sleep(500);
+					} catch (IOException ex) {
+						Log.e("Test", "IO failure:" + ex.getMessage());
 					}
-
-					ou.close();
-					in.close();
-					sockettoServer.close();
-					sockettoServer=null;
-					Thread.sleep(1000);
-				} catch (Exception ex) {
-					Log.e("Test", "Get Message failure:" + ex.getMessage());
-
 				}
+			} catch (Exception ex) {
+				Log.e("Test", "Get Message failure:" + ex.getMessage());
 			}
-
-			stopSelf();
 		}
 	}
 
-	public class SendMsgThread extends Thread
-	{
+	public class SendMsgThread extends Thread {
+
+		private boolean isGoonRunning;
+
+		public void setGoonRunning(boolean isGoonRunning) {
+			this.isGoonRunning = isGoonRunning;
+		}
+
+		public SendMsgThread() {
+			isGoonRunning = true;
+		}
+
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			super.run();
+			Log.e("Test", "Begin Send Mssage Thread");
+			char[] charbuffer = new char[1024];
+			int charcount = 0;
+			Socket sockettoServer = null;
+			OutputStream ou = null;
+			InputStream in = null;
+			MsgRecord msgRecord = null;
+			Intent intent = null;
+			int i = 0;
+			try {
+				while (isGoonRunning) {
+					try {
+
+						if (CommonVariables.getMsgRecordBuffer().size() > 0) {
+							sockettoServer = new Socket();
+							sockettoServer.connect(
+									new InetSocketAddress(CommonVariables
+											.getMCSIP(), CommonVariables
+											.getMCSPort()), 5000);
+
+							ou = sockettoServer.getOutputStream();
+							in = sockettoServer.getInputStream();
+							while (CommonVariables.getMsgRecordBuffer().size() > 0) {
+								msgRecord = CommonVariables
+										.getMsgRecordBuffer().get(i);
+
+								CommonVariables.getMsgRecordOperate()
+										.SaveMsgRecord(msgRecord,
+												ReciveMsgService.this);
+
+								JSONObject msgobject = SetMSGBox(msgRecord);
+
+								ou.write((CommonFlag.getF_MCSVerifyUAMSG() + msgobject
+										.toString()).getBytes("UTF-8"));
+
+								ou.flush();
+
+								BufferedReader bff = new BufferedReader(
+										new InputStreamReader(in, "UTF-8"));
+								charcount = bff.read(charbuffer);
+								if (charcount > 0) {
+									if (msgRecord.getMsgID().equalsIgnoreCase(
+											String.valueOf(charbuffer, 0,
+													charcount))) {
+										CommonVariables.getMsgRecordOperate()
+												.UpdateIsSend(
+														msgRecord.getMsgID(),
+														msgRecord.getChatID(),
+														ReciveMsgService.this);
+
+										CommonVariables.getMsgRecordBuffer()
+												.remove(0);
+										intent = new Intent();
+										intent.putExtra("FinishSend",
+												msgRecord.getMsgID());
+										intent.setAction(msgRecord.getChatID());
+										sendBroadcast(intent); // 发送广播
+									}
+								}
+							}
+							ou.close();
+							in.close();
+							sockettoServer.close();
+						}
+
+					} catch (IOException ex) {
+						Log.e("Test", "IO failure:" + ex.getMessage());
+					}
+					Thread.sleep(500);
+
+				}
+			} catch (Exception ex) {
+				Log.e("Test", "Send Message failure:" + ex.getMessage());
+			}
 		}
-		
+
+		private JSONObject SetMSGBox(MsgRecord msgRecord) {
+			JSONObject msgObject = new JSONObject();
+			try {
+				msgObject.put(CommonFlag.getF_MsgSenderObjectID(),
+						msgRecord.getMsgSenderObjectID());
+				msgObject.put(CommonFlag.getF_MsgSenderName(),
+						msgRecord.getMsgSenderName());
+				msgObject.put(CommonFlag.getF_MsgContent(),
+						msgRecord.getMsgContent());
+				msgObject.put(CommonFlag.getF_MsgRecipientObjectID(),
+						msgRecord.getMsgRecipientObjectID());
+				msgObject.put(CommonFlag.getF_MsgRecipientGroupID(),
+						msgRecord.getMsgRecipientGroupID());
+				msgObject
+						.put(CommonFlag.getF_MsgType(), msgRecord.getMsgType());
+				msgObject.put(CommonFlag.getF_SendTime(),
+						msgRecord.getSendTime());
+				msgObject.put(CommonFlag.getF_MsgID(), msgRecord.getMsgID());
+
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return msgObject;// CommonFlag.getF_MCSVerifyUAMSG() +
+								// msgObject.toString();
+		}
 	}
-	
-	
 }

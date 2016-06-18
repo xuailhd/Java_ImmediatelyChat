@@ -14,7 +14,13 @@ public interface IContactDataOperate {
 	
 	public ContactGroup[] LoadContactGroup(String objectID,Context packageContext);
 	
+	public String GetContactGroupname(String objectID,String groupID,Context packageContext);
+	
 	public ContactGroupSub[] LoadContactGroupSub(String objectID,Context packageContext);
 	
 	public void InitContactPersonInfo(String objectID,Context packageContext);
+	
+	public void UpdateLatestTime(String objectID,String latestTime, Context packageContext);
+	
+	public void CleanPersonInfo(String objectID,Context packageContext);
 }

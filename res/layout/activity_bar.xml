@@ -6,6 +6,8 @@
         android:id="@+id/ToolBar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:layout_alignParentBottom="true"
         android:layout_gravity="center"
         android:gravity="center_vertical"
@@ -15,6 +17,7 @@
             android:id="@+id/chatsView"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:textSize="20sp"
             android:layout_weight="1.0"
             android:gravity="center"
             android:text="Chats"/>
@@ -23,6 +26,7 @@
             android:id="@+id/personsView"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:textSize="20sp"
             android:layout_weight="1.0"
             android:gravity="center"
             android:text="Persons" />
@@ -31,6 +35,7 @@
             android:id="@+id/groupsView"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:textSize="20sp"
             android:layout_weight="1.0"
             android:gravity="center"
             android:text="Groups" />
