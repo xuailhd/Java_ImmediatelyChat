@@ -105,7 +105,7 @@ public class ChatOperate implements IChatOperate {
 	}
 
 	@Override
-	public ChatModel SetChat(JSONObject jsonObjecttemp,Context packageContext) {
+	public ChatModel GetChat(JSONObject jsonObjecttemp,Context packageContext) {
 		// TODO Auto-generated method stub
 		String localDataStr = null;
 		JSONArray jsonArray = null;
@@ -244,7 +244,7 @@ public class ChatOperate implements IChatOperate {
 	}
 
 	@Override
-	public ChatModel SetChat(String destinationObjectID,
+	public ChatModel GetChat(String destinationObjectID,
 			String destinationName, int chatType, Context packageContext) {
 		// TODO Auto-generated method stub
 		String localDataStr = null;
@@ -330,7 +330,7 @@ public class ChatOperate implements IChatOperate {
 				chatModel.setGroupName(destinationName);
 			}
 			
-			if(!jsonObject.isNull("LatestMsg"))
+			if(jsonObject.has("LatestMsg"))
 			{
 				chatModel.setLatestMsg(jsonObject.getString("LatestMsg"));
 			}
@@ -339,7 +339,7 @@ public class ChatOperate implements IChatOperate {
 				chatModel.setLatestMsg("");
 			}
 			
-			if(!jsonObject.isNull("LatestTime"))
+			if(jsonObject.has("LatestTime"))
 			{
 				chatModel.setLatestTime(jsonObject.getString("LatestTime"));
 			}
@@ -347,7 +347,12 @@ public class ChatOperate implements IChatOperate {
 			{
 				chatModel.setLatestTime("");
 			}
-		
+			
+			if(jsonObject.has("UnReadCount"))
+			{
+				chatModel.setUnReadCount(jsonObject.getInt("UnReadCount"));
+			}
+			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

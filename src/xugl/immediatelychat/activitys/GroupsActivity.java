@@ -10,6 +10,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import xugl.immediatelychat.R;
 import xugl.immediatelychat.common.CommonVariables;
+import xugl.immediatelychat.models.ChatModel;
 import xugl.immediatelychat.models.ContactGroup;
 
 public class GroupsActivity extends BaseActivity {
@@ -43,18 +44,31 @@ public class GroupsActivity extends BaseActivity {
 			
 		});
 		
+		
+	}
+	
+	private void CleanViews()
+	{
+		mainLayout.removeAllViews();
+	}
+	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
 		ContactGroup[] contactGroups= CommonVariables.getContactDataOperate().LoadContactGroup(CommonVariables.getObjectID(), this);
 		if(contactGroups==null || contactGroups.length<1)
 		{
 			return;
 		}
-		
+		CleanViews();
 		for(int i=0;i<contactGroups.length;i++)
 		{
 			addGroupIntoView(contactGroups[i]);
 		}
 	}
-	private void addGroupIntoView(ContactGroup contactGroup)
+
+	private void addGroupIntoView(final ContactGroup contactGroup)
 	{
 		ImageView pic=new ImageView(GroupsActivity.this);
 		pic.setImageResource(R.drawable.ic_launcher);
@@ -67,6 +81,19 @@ public class GroupsActivity extends BaseActivity {
 		linearLayout.setOrientation(LinearLayout.HORIZONTAL);
 		linearLayout.addView(pic);
 		linearLayout.addView(name);
+		
+		linearLayout.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				ChatModel chatModel = CommonVariables.getChatOperate().GetChat(contactGroup.getGroupObjectID(), 
+						contactGroup.getGroupName(), 2, GroupsActivity.this);
+				
+				Intent intent=new Intent();
+				intent.putExtra("ChatModel", chatModel);
+				intent.setClass(GroupsActivity.this, ChatActivity.class);
+				startActivity(intent);
+			}});
 		
 		mainLayout.addView(linearLayout);
 	}

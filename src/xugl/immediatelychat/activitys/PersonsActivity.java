@@ -36,7 +36,6 @@ public class PersonsActivity extends BaseActivity {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				Log.e("Test", "addperson");
 				Intent intent=new Intent();
 				intent.setClass(PersonsActivity.this, AddPersonActivity.class);
 				startActivity(intent);
@@ -71,11 +70,10 @@ public class PersonsActivity extends BaseActivity {
 		linearLayout.addView(name);
 		
 		linearLayout.setOnClickListener(new OnClickListener(){
-
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				ChatModel chatModel = CommonVariables.getChatOperate().SetChat(contactPersonList.getDestinationObjectID(), 
+				ChatModel chatModel = CommonVariables.getChatOperate().GetChat(contactPersonList.getDestinationObjectID(), 
 						contactPersonList.getContactPersonName(), 1, PersonsActivity.this);
 				
 				Intent intent=new Intent();

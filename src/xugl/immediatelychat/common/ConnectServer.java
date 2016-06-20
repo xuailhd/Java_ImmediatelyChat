@@ -45,6 +45,7 @@ public class ConnectServer implements IConnectServer {
 									ReTryMMSCount = 0;
 									// connect MCS
 									while (ReTryMCSCount > 0) {
+										
 										if (ConnectMCS(packageContext)) {
 											return;
 										} else {
@@ -249,6 +250,8 @@ public class ConnectServer implements IConnectServer {
 					ou.write(tempStr.getBytes("UTF-8"));
 					ou.flush();
 					charcount = bff.read(charbuffer);
+					
+					
 				}
 			}
 			jsonObject = null;
@@ -290,6 +293,7 @@ public class ConnectServer implements IConnectServer {
 				ou.flush();
 				charcount = bff.read(charbuffer);
 				mcsRereturn = String.valueOf(charbuffer, 0, charcount);
+				Log.e("Test", mcsRereturn);
 				if (mcsRereturn.equalsIgnoreCase("ok")) {
 					Intent intent = new Intent(); // Itent就是我们要发送的内容
 					intent.putExtra("MSG", "Success");

@@ -11,9 +11,9 @@ import xugl.immediatelychat.models.MsgRecord;
 public interface IChatOperate {
 	ArrayList<ChatModel> GetChats(Context packageContext);
 	
-	ChatModel SetChat(JSONObject jsonObject,Context packageContext);
+	ChatModel GetChat(JSONObject jsonObject,Context packageContext);
 	
-	ChatModel SetChat(String destinationObjectID,String destinationName,int chatType, Context packageContext);
+	ChatModel GetChat(String destinationObjectID,String destinationName,int chatType, Context packageContext);
 	
 	void UpdateUnReadCount(String chatID, Context packageContext);
 	

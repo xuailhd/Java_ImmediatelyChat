@@ -9,4 +9,6 @@ public interface ISendMsg {
 	void sendSearchRequest(String key,int type,Context packageContext);
 	
 	void sendAddPersonRequest(String objectID,Context packageContext);
+	
+	void sendAddGroupRequest(String objectID,Context packageContext);
 }

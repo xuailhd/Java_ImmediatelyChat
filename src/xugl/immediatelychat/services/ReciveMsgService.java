@@ -138,7 +138,7 @@ public class ReciveMsgService extends Service {
 							jsonObject = new JSONObject(message);
 
 							chatModel = CommonVariables.getChatOperate()
-									.SetChat(jsonObject, ReciveMsgService.this);
+									.GetChat(jsonObject, ReciveMsgService.this);
 
 							msgRecord = CommonVariables.getMsgRecordOperate()
 									.SaveMsgRecord(jsonObject,
@@ -189,7 +189,6 @@ public class ReciveMsgService extends Service {
 						sockettoServer = null;
 						Thread.sleep(500);
 					} catch (IOException ex) {
-						Log.e("Test", "IO failure:" + ex.getMessage());
 					}
 				}
 			} catch (Exception ex) {
@@ -244,7 +243,8 @@ public class ReciveMsgService extends Service {
 												ReciveMsgService.this);
 
 								JSONObject msgobject = SetMSGBox(msgRecord);
-
+								
+								Log.e("Test", "send msg" + msgobject.toString());
 								ou.write((CommonFlag.getF_MCSVerifyUAMSG() + msgobject
 										.toString()).getBytes("UTF-8"));
 
@@ -279,7 +279,6 @@ public class ReciveMsgService extends Service {
 						}
 
 					} catch (IOException ex) {
-						Log.e("Test", "IO failure:" + ex.getMessage());
 					}
 					Thread.sleep(500);
 

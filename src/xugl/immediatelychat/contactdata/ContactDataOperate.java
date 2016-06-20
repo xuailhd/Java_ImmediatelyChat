@@ -146,22 +146,41 @@ public class ContactDataOperate implements IContactDataOperate {
 				CommonVariables.getLocalDataManager().SaveData(objectID,"ContactGroupSubs", jsonArray.toString(), packageContext);
 			}
 			
-			if(contactData.getInt("DataType")==0)
+//			if(contactData.getInt("DataType")==0)
+//			{
+//				localDataStr=CommonVariables.getLocalDataManager().GetData(objectID, "ContactPerson", packageContext);
+//
+//				if(localDataStr==null)
+//				{
+//					jsonObject=new JSONObject();
+//				}
+//				else
+//				{
+//					jsonObject=new JSONObject(localDataStr);
+//				}
+//				
+//				CommonVariables.getLocalDataManager().SaveData(objectID,"ContactPerson", jsonObject.toString(), packageContext);
+//			}
+			
+			if(contactData.has("UpdateTime"))
 			{
-				localDataStr=CommonVariables.getLocalDataManager().GetData(objectID, "ContactPerson", packageContext);
-
-				if(localDataStr==null)
+				if(CommonVariables.getUpdateTime().compareTo(contactData.getString("UpdateTime"))<0)
 				{
-					jsonObject=new JSONObject();
+					CommonVariables.setUpdateTime(contactData.getString("UpdateTime"));
+					
+					localDataStr=CommonVariables.getLocalDataManager().GetData(objectID, "ContactPerson", packageContext);
+					
+					if(localDataStr==null)
+					{
+						jsonObject=new JSONObject();
+					}
+					else
+					{
+						jsonObject=new JSONObject(localDataStr);
+					}
+					jsonObject.put("UpdateTime",  contactData.getString("UpdateTime"));
+					CommonVariables.getLocalDataManager().SaveData(objectID,"ContactPerson", jsonObject.toString(), packageContext);
 				}
-				else
-				{
-					jsonObject=new JSONObject(localDataStr);
-				}
-				
-				jsonObject.put("UpdateTime",  contactData.getString("UpdateTime"));
-				CommonVariables.getLocalDataManager().SaveData(objectID,"ContactPerson", jsonObject.toString(), packageContext);
-				CommonVariables.setUpdateTime(contactData.getString("UpdateTime"));
 			}
 			
 			localDataStr=null;

@@ -33,5 +33,4 @@
 		    android:orientation="vertical">"
     	</LinearLayout>
 	</ScrollView>
-	<include layout="@layout/activity_bar"/>
 </LinearLayout>

@@ -21,6 +21,7 @@ import android.widget.TextView;
 import xugl.immediatelychat.R;
 import xugl.immediatelychat.common.CommonVariables;
 import xugl.immediatelychat.models.ContactGroup;
+import xugl.immediatelychat.models.ContactPerson;
 
 public class AddGroupActivity extends Activity {
 	private Button search;
@@ -29,56 +30,73 @@ public class AddGroupActivity extends Activity {
 	private Handler mHandler=new Handler();
 	private SearchBroadCast searchBroadCast;
 	
-	
 	private class SearchBroadCast extends BroadcastReceiver
 	{
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			// TODO Auto-generated method stub
-        	JSONArray jsonArray =null;
+			JSONArray jsonArray =null;
         	ContactGroup contactGroup=null;
         	ContactGroup[] contactGroups=null;
-            //得到广播中得到的数据，并显示出来
-            final String message = intent.getStringExtra("SearchResult");
-            Log.e("Test", "get search message:" + message);
 
-            try {
-            	if(!message.equals("No Result") && !message.equals("No Connect"))
-                {
-            		jsonArray=new JSONArray(message);
-            		
-            		if(jsonArray!=null && jsonArray.length()>0)
-            		{
-            			contactGroups=new ContactGroup[jsonArray.length()];
-            			for(int i=0;i<jsonArray.length();i++)
-                		{
-            				contactGroup=new ContactGroup();
-            				contactGroup.setGroupName(jsonArray.getJSONObject(i).getString("GroupName"));
-            				contactGroup.setGroupObjectID(jsonArray.getJSONObject(i).getString("GroupObjectID"));
-            				contactGroups[i]=contactGroup;
-                		}
-            		}
-                }
-				
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-            
-            final ContactGroup[] contactGroupsnew=contactGroups;
+        	String broadCastType=intent.getStringExtra("BroadCastType");
+        	
+        	if(broadCastType.equals("Search"))
+        	{
+	            String message = intent.getStringExtra("SearchResult");
+	            Log.e("Test", "get search message:" + message);
+	
+	            try {
+	            	if(!message.equals("No Result") && !message.equals("No Connect"))
+	                {
+	            		jsonArray=new JSONArray(message);
+	            		
+	            		if(jsonArray!=null && jsonArray.length()>0)
+	            		{
+	            			contactGroups=new ContactGroup[jsonArray.length()];
+	            			for(int i=0;i<jsonArray.length();i++)
+	                		{
+	            				contactGroup = new ContactGroup();
+	            				
+	            				contactGroup.setGroupName(jsonArray.getJSONObject(i).getString("GroupName"));
+	            				contactGroup.setGroupObjectID(jsonArray.getJSONObject(i).getString("GroupObjectID"));
+	            				contactGroup.setIsDelete(jsonArray.getJSONObject(i).getBoolean("IsDelete"));
 
-        	mHandler.post(new Runnable() {  
-				public void run() {  
-		            if(contactGroupsnew!=null && contactGroupsnew.length>0)
-		            {
-    					for(int i=0;i<contactGroupsnew.length;i++)
-    	            	{
-    	            		addGroupIntoView(contactGroupsnew[i]);
-    	            	}
-		            }
-		            search.setEnabled(true);
-				}	
-			}); 
+	            				contactGroups[i] = contactGroup;
+	                		}
+	            		}
+	                }
+					
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	            
+	            final ContactGroup[] contactGroupsnew=contactGroups;
+	
+	        	mHandler.post(new Runnable() {  
+					public void run() {  
+			            if(contactGroupsnew!=null && contactGroupsnew.length>0)
+			            {
+	    					for(int i=0;i<contactGroupsnew.length;i++)
+	    	            	{
+	    						addGroupIntoView(contactGroupsnew[i]);
+	    	            	}
+			            }
+			            search.setEnabled(true);
+					}	
+				}); 
+        	}
+        	else if (broadCastType.equals("Add"))
+        	{
+        		 
+        		int status=intent.getIntExtra("Status", -1);
+        		Log.e("Test", "get group add message:" + String.valueOf(status));
+        		if(status==0)
+        		{
+        			finish();
+        		}
+        	}
 		}
 	}
 	
@@ -120,7 +138,7 @@ public class AddGroupActivity extends Activity {
         registerReceiver(searchBroadCast, filter);
 	}
 	
-	private void addGroupIntoView(ContactGroup contactGroup)
+	private void addGroupIntoView(final ContactGroup contactGroup)
 	{
 		ImageView pic=new ImageView(AddGroupActivity.this);
 		pic.setImageResource(R.drawable.ic_launcher);
@@ -134,14 +152,14 @@ public class AddGroupActivity extends Activity {
 		linearLayout.addView(pic);
 		linearLayout.addView(name);
 		
-//		linearLayout.setOnClickListener(new OnClickListener(){
-//			@Override
-//			public void onClick(View arg0) {
-//				// TODO Auto-generated method stub
-//				
-//				CommonVariables.getSendMsg().sendAddGroupRequest(contactPerson.getObjectID(), AddPersonActivity.this);
-//			}
-//		});
+		linearLayout.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				
+				CommonVariables.getSendMsg().sendAddGroupRequest(contactGroup.getGroupObjectID(), AddGroupActivity.this);
+			}
+		});
 		
 		searchlayout.addView(linearLayout);
 	}

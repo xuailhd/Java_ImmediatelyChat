@@ -123,6 +123,8 @@ public class ChatActivity extends Activity {
 		Intent intent=getIntent();
 		
 		chatModel= intent.getParcelableExtra("ChatModel");
+		
+		Log.e("Test", "Display chatModel:" + chatModel.getChatType() + " vs " + chatModel.getGroupID() + " vs " + chatModel.getDestinationObjectID());
 		ArrayList<MsgRecord> msgRecords= CommonVariables.getMsgRecordOperate().GetMsgRecord(chatModel.getChatID(),ChatActivity.this);
 
 		for(int i=0;i<msgRecords.size();i++)

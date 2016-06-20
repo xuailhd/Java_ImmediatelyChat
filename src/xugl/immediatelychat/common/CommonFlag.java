@@ -163,12 +163,17 @@ public class CommonFlag {
 	
 	//client model
     private static String f_DestinationObjectID="DestinationObjectID";
+    private static String f_GroupObjectID = "GroupObjectID";
     private static String f_MCS_IP="MCS_IP";
     private static String f_MCS_Port="MCS_Port";
     private static String f_Status="Status";
 
 	public static String getF_DestinationObjectID() {
 		return f_DestinationObjectID;
+	}
+
+	public static String getF_GroupObjectID() {
+		return f_GroupObjectID;
 	}
 
 	public static String getF_MCS_IP() {
