@@ -199,8 +199,8 @@ public class ConnectServer implements IConnectServer {
 			OutputStream ou = sockettoServer.getOutputStream();
 			InputStream in = sockettoServer.getInputStream();
 
-//			 CommonVariables.getContactDataOperate().CleanPersonInfo(CommonVariables.getObjectID(),
-//			 packageContext);
+			 CommonVariables.getContactDataOperate().CleanPersonInfo(CommonVariables.getObjectID(),
+			 packageContext);
 			CommonVariables.getContactDataOperate().InitContactPersonInfo(
 					CommonVariables.getObjectID(), packageContext);
 
