@@ -327,7 +327,7 @@ public class ContactDataOperate implements IContactDataOperate {
 			{
 				jsonObject=new JSONObject(localDataStr);
 			}
-			
+			Log.e("Test","UpdateTime:" + jsonObject.getString("UpdateTime"));
 			CommonVariables.setUpdateTime(jsonObject.getString("UpdateTime"));
 			CommonVariables.setLatestTime(jsonObject.getString("LatestTime"));
 			
@@ -412,16 +412,20 @@ public class ContactDataOperate implements IContactDataOperate {
 		String localDataStr=null;
 		JSONObject jsonObject=null;
 		try {
-			localDataStr=CommonVariables.getLocalDataManager().GetData(objectID, "ContactPerson", packageContext);
-			
-			if(localDataStr!=null)
-			{
-				jsonObject=new JSONObject(localDataStr);
-				jsonObject.put("LatestTime", CommonVariables.getMinDate());
-				CommonVariables.getLocalDataManager().SaveData(objectID, "ContactPerson",jsonObject.toString(), packageContext);
-			}
-			
-		} catch (JSONException e) {
+//			localDataStr=CommonVariables.getLocalDataManager().GetData(objectID, "ContactPerson", packageContext);
+//			
+//			if(localDataStr!=null)
+//			{
+//				jsonObject=new JSONObject(localDataStr);
+//				jsonObject.put("LatestTime", CommonVariables.getMinDate());
+//				jsonObject.put("UpdateTime", CommonVariables.getMinDate());
+//				CommonVariables.getLocalDataManager().SaveData(objectID, "ContactPerson",jsonObject.toString(), packageContext);
+//			}
+			CommonVariables.getLocalDataManager().DeleteData(objectID,"ContactPerson", packageContext);
+			CommonVariables.getLocalDataManager().DeleteData(objectID,"ContactPersonLists", packageContext);
+			CommonVariables.getLocalDataManager().DeleteData(objectID,"ContactGroups", packageContext);
+			CommonVariables.getLocalDataManager().DeleteData(objectID,"ContactGroupSubs", packageContext);
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

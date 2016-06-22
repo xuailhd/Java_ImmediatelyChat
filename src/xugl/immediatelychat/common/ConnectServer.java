@@ -194,12 +194,12 @@ public class ConnectServer implements IConnectServer {
 			Socket sockettoServer = new Socket();
 			sockettoServer.connect(
 					new InetSocketAddress(CommonVariables.getMMSIP(),
-							CommonVariables.getMMSPort()), 5000);
+							CommonVariables.getMMSPort()), 2000);
 
 			OutputStream ou = sockettoServer.getOutputStream();
 			InputStream in = sockettoServer.getInputStream();
 
-			 CommonVariables.getContactDataOperate().CleanPersonInfo(CommonVariables.getObjectID(),
+			CommonVariables.getContactDataOperate().CleanPersonInfo(CommonVariables.getObjectID(),
 			 packageContext);
 			CommonVariables.getContactDataOperate().InitContactPersonInfo(
 					CommonVariables.getObjectID(), packageContext);
@@ -272,7 +272,7 @@ public class ConnectServer implements IConnectServer {
 			Socket serivceSocket = new Socket();
 			serivceSocket.connect(
 					new InetSocketAddress(CommonVariables.getMCSIP(),
-							CommonVariables.getMCSPort()), 5000);
+							CommonVariables.getMCSPort()), 2000);
 
 			OutputStream ou = serivceSocket.getOutputStream();
 			InputStream in = serivceSocket.getInputStream();
@@ -282,8 +282,11 @@ public class ConnectServer implements IConnectServer {
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put(CommonFlag.getF_ObjectID(),
 					CommonVariables.getObjectID());
+			
+			Log.e("Test", "UpdateTime" + CommonVariables.getUpdateTime());
 			jsonObject.put(CommonFlag.getF_UpdateTime(),
 					CommonVariables.getUpdateTime());
+			jsonObject.put(CommonFlag.getF_LatestTime(), CommonVariables.getLatestTime());
 			String msg = CommonFlag.getF_MCSVerifyUA() + jsonObject.toString();
 
 			String mcsRereturn = null;

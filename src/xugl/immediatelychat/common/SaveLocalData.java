@@ -51,9 +51,12 @@ public class SaveLocalData implements ISaveLocalData {
 	public void DeleteData(String fieldName, Context packageContext) {
 		// TODO Auto-generated method stub
 		SharedPreferences settings = packageContext.getSharedPreferences(commonFileName, Activity.MODE_PRIVATE);  
-		SharedPreferences.Editor editor = settings.edit();  
-		editor.remove(fieldName);
-		editor.commit();
+		if(settings.contains(fieldName))
+		{
+			SharedPreferences.Editor editor = settings.edit();  
+			editor.remove(fieldName);
+			editor.commit();
+		}
 	}
 
 	@Override
@@ -61,9 +64,12 @@ public class SaveLocalData implements ISaveLocalData {
 			Context packageContext) {
 		// TODO Auto-generated method stub
 		SharedPreferences settings = packageContext.getSharedPreferences(filename, Activity.MODE_PRIVATE);  
-		SharedPreferences.Editor editor = settings.edit();  
-		editor.remove(fieldName);
-		editor.commit();
+		if(settings.contains(fieldName))
+		{
+			SharedPreferences.Editor editor = settings.edit();  
+			editor.remove(fieldName);
+			editor.commit();
+		}
 	}
 
 	@Override
