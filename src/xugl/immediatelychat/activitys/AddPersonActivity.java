@@ -86,13 +86,9 @@ public class AddPersonActivity extends Activity  {
         	else if (broadCastType.equals("Add"))
         	{
         		int status=intent.getIntExtra("Status", -1);
-        		
+        		Log.e("Test", "get person add message:" + String.valueOf(status));
         		if(status==0)
         		{
-        			Intent intent2=new Intent();
-        			intent2.setClass(AddPersonActivity.this, ChatActivity.class);
-        			intent2.putExtra("ChatModel", intent.getParcelableExtra("ChatModel"));
-        			startActivity(intent2);
         			finish();
         		}
         	}

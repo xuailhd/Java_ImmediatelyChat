@@ -467,8 +467,8 @@ public final class R {
         public static final int ToolBar=0x7f090000;
         public static final int account=0x7f09001d;
         public static final int action_settings=0x7f090023;
-        public static final int addgroup=0x7f09000d;
-        public static final int addperson=0x7f090016;
+        public static final int addgroup=0x7f09000b;
+        public static final int addperson=0x7f090014;
         public static final int button1=0x7f090013;
         public static final int cancel=0x7f090020;
         public static final int charsLayout=0x7f09000f;
@@ -477,9 +477,9 @@ public final class R {
         public static final int chatinput=0x7f090012;
         public static final int chatsView=0x7f090001;
         public static final int errorMsg=0x7f090022;
-        public static final int groupsScrollView=0x7f09000b;
+        public static final int groupsScrollView=0x7f09000c;
         public static final int groupsView=0x7f090003;
-        public static final int groupslayout=0x7f09000c;
+        public static final int groupslayout=0x7f09000d;
         public static final int imageView1=0x7f090017;
         public static final int login=0x7f090021;
         public static final int mainbuttonSend=0x7f090007;
@@ -487,9 +487,9 @@ public final class R {
         public static final int mainchatScrollView=0x7f090004;
         public static final int mainchatinput=0x7f090006;
         public static final int password=0x7f09001f;
-        public static final int personsScrollView=0x7f090014;
+        public static final int personsScrollView=0x7f090015;
         public static final int personsView=0x7f090002;
-        public static final int personslayout=0x7f090015;
+        public static final int personslayout=0x7f090016;
         public static final int port=0x7f09001b;
         public static final int scrollView1=0x7f090010;
         public static final int search=0x7f090009;

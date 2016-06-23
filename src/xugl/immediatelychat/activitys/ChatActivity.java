@@ -19,6 +19,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -92,10 +93,6 @@ public class ChatActivity extends Activity {
      					scrollView.post(new Runnable() {  
      		            	public void run() {  
      		            		scrollView.fullScroll(ScrollView.FOCUS_DOWN); 
-//     		            		scrollView.setFocusable(true);
-//     		            		scrollView.setFocusableInTouchMode(true);
-//     		            		scrollView.requestFocus();
-//     		            		scrollView.requestFocusFromTouch();
      						}  
      		            });
      				}  
@@ -124,7 +121,6 @@ public class ChatActivity extends Activity {
 		
 		chatModel= intent.getParcelableExtra("ChatModel");
 		
-		Log.e("Test", "Display chatModel:" + chatModel.getChatType() + " vs " + chatModel.getGroupID() + " vs " + chatModel.getDestinationObjectID());
 		ArrayList<MsgRecord> msgRecords= CommonVariables.getMsgRecordOperate().GetMsgRecord(chatModel.getChatID(),ChatActivity.this);
 
 		for(int i=0;i<msgRecords.size();i++)
@@ -171,6 +167,8 @@ public class ChatActivity extends Activity {
 					
 					editText.setText(null);
 					editText.clearFocus();
+				    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);  
+				    imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);  
 					scrollView.setFocusable(true);
 					scrollView.setFocusableInTouchMode(true);
 					scrollView.requestFocus();
@@ -192,6 +190,8 @@ public class ChatActivity extends Activity {
 				scrollView.fullScroll(ScrollView.FOCUS_DOWN); 
 			}});
 		editText.clearFocus();
+		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);  
+	    imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);  
 		scrollView.setFocusable(true);
 		scrollView.setFocusableInTouchMode(true);
 		scrollView.requestFocus();
@@ -206,6 +206,7 @@ public class ChatActivity extends Activity {
 		
 		TextView name=new TextView(ChatActivity.this);
 		name.setText(msgRecord.getMsgSenderName());
+		name.setGravity(Gravity.CENTER);
 		
 		LinearLayout linearLayout=new LinearLayout(ChatActivity.this);
 		linearLayout.setOrientation(LinearLayout.VERTICAL);

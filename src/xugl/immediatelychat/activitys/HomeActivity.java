@@ -30,6 +30,7 @@ public class HomeActivity extends BaseActivity {
         {
             //得到广播中得到的数据，并显示出来
             final String msg = intent.getStringExtra("Msg");
+            Log.e("Test", "NewMsg");
             if(msg.equals("NewMsg"))
             {
             	mHandler.post(new Runnable() {  
@@ -78,7 +79,7 @@ public class HomeActivity extends BaseActivity {
 	{
 		ImageView pic=new ImageView(HomeActivity.this);
 		pic.setImageResource(R.drawable.ic_launcher);
-		
+		Log.e("Test", " addChatIntoView: " + chatModel.getChatType() + " : ContactPersonName :" + chatModel.getContactPersonName() + ":GroupName:" + chatModel.getGroupName());
 		TextView name=new TextView(HomeActivity.this);
 		if(chatModel.getChatType()==1)
 		{
@@ -151,6 +152,7 @@ public class HomeActivity extends BaseActivity {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		Log.e("Test", "onResume");
 		ArrayList<ChatModel> chatModels=CommonVariables.getChatOperate().GetChats(HomeActivity.this);
 		if(chatModels==null || chatModels.size()<1)
 		{

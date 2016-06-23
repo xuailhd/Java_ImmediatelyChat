@@ -3,6 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
+    <TextView
+	    android:id="@+id/addperson"
+	    android:layout_width="wrap_content"
+	    android:layout_height="30dp"
+	    android:layout_gravity="center"
+	    android:text="Search New Person" />
     <ScrollView
         android:id="@+id/personsScrollView"
 	    android:layout_width="match_parent"
@@ -29,12 +35,6 @@
                         android:text="张三" />
 	    	</LinearLayout>
 	    	 -->
-	    	 <TextView
-    		    android:id="@+id/addperson"
-    		    android:layout_width="wrap_content"
-    		    android:layout_height="30dp"
-    		    android:layout_gravity="center"
-    		    android:text="Search New Person" />
 	    </LinearLayout>
     </ScrollView>
 	<include layout="@layout/activity_bar"/>

@@ -39,7 +39,7 @@ public class LoginActivity extends Activity {
             final String message = intent.getStringExtra("MSG");
             if(message.equals("Success"))
             {	
-            	CommonVariables.getChatOperate().CleanChats(LoginActivity.this);
+//            	CommonVariables.getChatOperate().CleanChats(LoginActivity.this);
             	startService(new Intent().setClass(LoginActivity.this, ReciveMsgService.class));
             	
             	Intent intent2 = new Intent();

@@ -1,6 +1,7 @@
 package xugl.immediatelychat.common;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -199,8 +200,8 @@ public class ConnectServer implements IConnectServer {
 			OutputStream ou = sockettoServer.getOutputStream();
 			InputStream in = sockettoServer.getInputStream();
 
-			CommonVariables.getContactDataOperate().CleanPersonInfo(CommonVariables.getObjectID(),
-			 packageContext);
+//			CommonVariables.getContactDataOperate().CleanPersonInfo(CommonVariables.getObjectID(),
+//			 packageContext);
 			CommonVariables.getContactDataOperate().InitContactPersonInfo(
 					CommonVariables.getObjectID(), packageContext);
 
@@ -290,27 +291,20 @@ public class ConnectServer implements IConnectServer {
 			String msg = CommonFlag.getF_MCSVerifyUA() + jsonObject.toString();
 
 			String mcsRereturn = null;
-			int retrytimes = 3;
-			while (retrytimes > 0) {
-				ou.write(msg.getBytes("UTF-8"));
-				ou.flush();
-				charcount = bff.read(charbuffer);
-				mcsRereturn = String.valueOf(charbuffer, 0, charcount);
-				Log.e("Test", mcsRereturn);
-				if (mcsRereturn.equalsIgnoreCase("ok")) {
-					Intent intent = new Intent(); // Itent就是我们要发送的内容
-					intent.putExtra("MSG", "Success");
-					intent.setAction("LoginActivity"); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
-					packageContext.sendBroadcast(intent); // 发送广播
-					return true;
-				} else if (mcsRereturn.equalsIgnoreCase("wait")) {
-					retrytimes--;
-					Thread.sleep(500);
-					continue;
-				} else {
-					break;
-				}
-			}
+
+			ou.write(msg.getBytes("UTF-8"));
+			ou.flush();
+			charcount = bff.read(charbuffer);
+			mcsRereturn = String.valueOf(charbuffer, 0, charcount);
+			Log.e("Test", mcsRereturn);
+			if (mcsRereturn.equalsIgnoreCase("ok")) {
+				Intent intent = new Intent(); // Itent就是我们要发送的内容
+				intent.putExtra("MSG", "Success");
+				intent.setAction("LoginActivity"); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
+				packageContext.sendBroadcast(intent); // 发送广播
+				serivceSocket.close();
+				return true;
+			} 
 			serivceSocket.close();
 		} catch (Exception ex) {
 			Log.e("Test", "Can not connect MCS:" + ex.getMessage());

@@ -115,6 +115,7 @@ public class ChatOperate implements IChatOperate {
 		int i = 0;
 		int chatType = 0;
 		String destinationObjectID = null;
+		String destinationName = null;
 		try
 		{
 			String groupid = jsonObjecttemp.getString(CommonFlag.getF_MsgRecipientGroupID());
@@ -122,13 +123,14 @@ public class ChatOperate implements IChatOperate {
 			{
 				chatType=2;
 				destinationObjectID = groupid;
+				destinationName = CommonVariables.getContactDataOperate().GetContactGroupname(CommonVariables.getObjectID(), destinationObjectID, packageContext);
 			}
 			else
 			{
 				chatType=1;
 				destinationObjectID = jsonObjecttemp.getString(CommonFlag.getF_MsgSenderObjectID());
+				destinationName = jsonObjecttemp.getString(CommonFlag.getF_MsgSenderName());
 			}
-			String destinationName = jsonObjecttemp.getString(CommonFlag.getF_MsgSenderName());
 			
 			localDataStr = CommonVariables.getLocalDataManager().GetData(CommonVariables.getObjectID(),"ChatModels", packageContext);
 			if(localDataStr==null || localDataStr.length()<=0)
@@ -169,14 +171,17 @@ public class ChatOperate implements IChatOperate {
 					jsonObject.put("ChatID", UUID.randomUUID().toString());
 					jsonObject.put("DestinationObjectID", destinationObjectID);
 					jsonObject.put("ContactPersonName", destinationName);
+					jsonObject.put("LatestMsg", jsonObjecttemp.getString(CommonFlag.getF_MsgContent()));
 				}
 				else if (chatType == 2)
 				{
 					jsonObject.put("ChatID", UUID.randomUUID().toString());
 					jsonObject.put("GroupID", destinationObjectID);
 					jsonObject.put("GroupName", destinationName);
+					jsonObject.put("LatestMsg", jsonObjecttemp.getString(CommonFlag.getF_MsgSenderName()) + ": " 
+							+ jsonObjecttemp.getString(CommonFlag.getF_MsgContent()));
 				}
-				jsonObject.put("LatestMsg", jsonObjecttemp.getString(CommonFlag.getF_MsgContent()));
+				
 				jsonObject.put("LatestTime", jsonObjecttemp.getString(CommonFlag.getF_SendTime()));
 				jsonObject.put("UnReadCount", 1);
 				jsonArray.put(jsonObject);
@@ -193,7 +198,16 @@ public class ChatOperate implements IChatOperate {
 				{
 					jsonObject.put("UnReadCount", 1);
 				}
-				jsonObject.put("LatestMsg", jsonObjecttemp.getString(CommonFlag.getF_MsgContent()));
+				if(chatType==1)
+				{
+					jsonObject.put("LatestMsg", jsonObjecttemp.getString(CommonFlag.getF_MsgContent()));
+				}
+				else if (chatType == 2)
+				{
+					jsonObject.put("LatestMsg", jsonObjecttemp.getString(CommonFlag.getF_MsgSenderName()) + ": " 
+							+ jsonObjecttemp.getString(CommonFlag.getF_MsgContent()));
+				}
+				
 				jsonObject.put("LatestTime", jsonObjecttemp.getString(CommonFlag.getF_SendTime()));
 				jsonArray.put(findindex,jsonObject);
 				CommonVariables.getLocalDataManager().SaveData(CommonVariables.getObjectID(),"ChatModels", jsonArray.toString(), packageContext);
@@ -206,26 +220,31 @@ public class ChatOperate implements IChatOperate {
 				chatModel.setChatID(jsonObject.getString("ChatID"));
 				chatModel.setDestinationObjectID(destinationObjectID);
 				chatModel.setContactPersonName(destinationName);
+				if(!jsonObject.isNull("LatestMsg"))
+				{
+					chatModel.setLatestMsg(jsonObject.getString("LatestMsg"));
+				}
+				else
+				{
+					chatModel.setLatestMsg("");
+				}
 			}
 			else if (chatType == 2)
 			{
 				chatModel.setChatID(jsonObject.getString("ChatID"));
 				chatModel.setGroupID(destinationObjectID);
-				if(destinationName==null || destinationName.length()==0)
-				{
-					destinationName = CommonVariables.getContactDataOperate().GetContactGroupname(CommonVariables.getObjectID(), destinationObjectID, packageContext);
-				}
 				chatModel.setGroupName(destinationName);
+				if(!jsonObject.isNull("LatestMsg"))
+				{
+					chatModel.setLatestMsg(jsonObject.getString("LatestMsg"));
+				}
+				else
+				{
+					chatModel.setLatestMsg("");
+				}
 			}
 			
-			if(!jsonObject.isNull("LatestMsg"))
-			{
-				chatModel.setLatestMsg(jsonObject.getString("LatestMsg"));
-			}
-			else
-			{
-				chatModel.setLatestMsg("");
-			}
+			
 			
 			if(!jsonObject.isNull("LatestTime"))
 			{
@@ -288,6 +307,7 @@ public class ChatOperate implements IChatOperate {
 
 			if(findindex == -1)
 			{
+				
 				jsonObject=new JSONObject();
 				jsonObject.put("ChatType", chatType);	
 				if(chatType == 1)
@@ -302,7 +322,7 @@ public class ChatOperate implements IChatOperate {
 					jsonObject.put("GroupID", destinationObjectID);
 					jsonObject.put("GroupName", destinationName);
 				}
-				
+				Log.e("Test", "new Chat:" + jsonObject.getString("ChatID"));
 				jsonArray.put(jsonObject);
 				CommonVariables.getLocalDataManager().SaveData(CommonVariables.getObjectID(),"ChatModels", jsonArray.toString(), packageContext);
 			}
@@ -313,6 +333,7 @@ public class ChatOperate implements IChatOperate {
 
 			chatModel = new ChatModel();
 			chatModel.setChatType(chatType);
+			Log.e("Test", "new chatModel:" + jsonObject.getString("ChatID"));
 			if(chatType == 1)
 			{
 				chatModel.setChatID(jsonObject.getString("ChatID"));
@@ -323,13 +344,9 @@ public class ChatOperate implements IChatOperate {
 			{
 				chatModel.setChatID(jsonObject.getString("ChatID"));
 				chatModel.setGroupID(destinationObjectID);
-				if(destinationName==null || destinationName.length()==0)
-				{
-					destinationName = CommonVariables.getContactDataOperate().GetContactGroupname(CommonVariables.getObjectID(), destinationObjectID, packageContext);
-				}
 				chatModel.setGroupName(destinationName);
 			}
-			
+			Log.e("Test", "check chatModel:" + chatModel.getChatID());
 			if(jsonObject.has("LatestMsg"))
 			{
 				chatModel.setLatestMsg(jsonObject.getString("LatestMsg"));
