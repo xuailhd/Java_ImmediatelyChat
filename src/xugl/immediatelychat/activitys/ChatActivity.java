@@ -249,7 +249,6 @@ public class ChatActivity extends Activity {
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		Log.e("Test", "unregisterReceiver ChatActivity");
 		if(receiveBroadCast!=null)
 		{
 			unregisterReceiver(receiveBroadCast);

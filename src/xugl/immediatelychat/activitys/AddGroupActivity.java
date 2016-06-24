@@ -44,7 +44,6 @@ public class AddGroupActivity extends Activity {
         	if(broadCastType.equals("Search"))
         	{
 	            String message = intent.getStringExtra("SearchResult");
-	            Log.e("Test", "get search message:" + message);
 	
 	            try {
 	            	if(!message.equals("No Result") && !message.equals("No Connect"))
@@ -91,7 +90,6 @@ public class AddGroupActivity extends Activity {
         	{
         		 
         		int status=intent.getIntExtra("Status", -1);
-        		Log.e("Test", "get group add message:" + String.valueOf(status));
         		if(status==0)
         		{
         			finish();
@@ -126,6 +124,7 @@ public class AddGroupActivity extends Activity {
 					// TODO Auto-generated method stub
 					String key=searchinput.getText().toString();
 					CommonVariables.getSendMsg().sendSearchRequest(key, 2, AddGroupActivity.this);
+					CleanViews();
 					search.setEnabled(false);
 				}
 			}
@@ -136,6 +135,11 @@ public class AddGroupActivity extends Activity {
         IntentFilter filter = new IntentFilter();
         filter.addAction("SearchGroup");    
         registerReceiver(searchBroadCast, filter);
+	}
+	
+	private void CleanViews()
+	{
+		searchlayout.removeAllViews();
 	}
 	
 	private void addGroupIntoView(final ContactGroup contactGroup)

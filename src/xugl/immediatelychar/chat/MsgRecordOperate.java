@@ -23,7 +23,6 @@ public class MsgRecordOperate implements IMsgRecordOperate {
 		ArrayList<MsgRecord> msgRecords= null;
 		MsgRecord msgRecord = null;
 		try {
-			Log.e("Test", "begin find chatid:" + chatID + " record");
 			Map<String, ?> map=CommonVariables.getLocalDataManager().GetAllData("MSG" + chatID,packageContext);
 			
 			if(map!=null)
@@ -63,9 +62,6 @@ public class MsgRecordOperate implements IMsgRecordOperate {
 			        	msgRecord.setChatID(jsonObject.getString("ChatID"));
 			        }
 			        else
-			        {
-			        	Log.e("Test", "Missing Is ChatID,MsgID:" + msgRecord.getMsgID());
-			        }
 			        
 			        if(jsonObject.has("IsSend"))
 			        {
@@ -73,7 +69,6 @@ public class MsgRecordOperate implements IMsgRecordOperate {
 			        }
 			        else
 			        {
-			        	Log.e("Test", "Missing Is Send,MsgID:" + msgRecord.getMsgID());
 			        	msgRecord.setIsSend(1);
 			        }
 			        msgRecords.add(msgRecord);
@@ -166,10 +161,6 @@ public class MsgRecordOperate implements IMsgRecordOperate {
 				jsonObject.put("ChatID", chatID);
 				
 				CommonVariables.getLocalDataManager().SaveData("MSG" + chatID,msgRecord.getMsgID(),jsonObject.toString(), packageContext);
-			}
-			else
-			{
-				Log.e("Test", "exist MsgRecord");
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block

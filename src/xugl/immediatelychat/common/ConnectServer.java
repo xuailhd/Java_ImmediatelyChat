@@ -114,7 +114,6 @@ public class ConnectServer implements IConnectServer {
 				JSONObject psresultjsonObject = new JSONObject(strResult);
 
 				int status = psresultjsonObject.getInt("Status");
-				Log.e("Test", "PS return:" + strResult);
 				if (status == 1) {
 					intent = new Intent(); // Itent就是我们要发送的内容
 					intent.putExtra("MSG", "Password incorrect");
@@ -261,7 +260,6 @@ public class ConnectServer implements IConnectServer {
 			sockettoServer.close();
 			return true;
 		} catch (Exception ex) {
-			Log.e("Test", "Can not connect MMS:" + ex.getMessage());
 		}
 		return false;
 	}
@@ -283,8 +281,6 @@ public class ConnectServer implements IConnectServer {
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put(CommonFlag.getF_ObjectID(),
 					CommonVariables.getObjectID());
-			
-			Log.e("Test", "UpdateTime" + CommonVariables.getUpdateTime());
 			jsonObject.put(CommonFlag.getF_UpdateTime(),
 					CommonVariables.getUpdateTime());
 			jsonObject.put(CommonFlag.getF_LatestTime(), CommonVariables.getLatestTime());
@@ -296,7 +292,6 @@ public class ConnectServer implements IConnectServer {
 			ou.flush();
 			charcount = bff.read(charbuffer);
 			mcsRereturn = String.valueOf(charbuffer, 0, charcount);
-			Log.e("Test", mcsRereturn);
 			if (mcsRereturn.equalsIgnoreCase("ok")) {
 				Intent intent = new Intent(); // Itent就是我们要发送的内容
 				intent.putExtra("MSG", "Success");
@@ -307,7 +302,6 @@ public class ConnectServer implements IConnectServer {
 			} 
 			serivceSocket.close();
 		} catch (Exception ex) {
-			Log.e("Test", "Can not connect MCS:" + ex.getMessage());
 		}
 
 		return false;

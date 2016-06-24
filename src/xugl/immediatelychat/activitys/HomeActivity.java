@@ -30,7 +30,6 @@ public class HomeActivity extends BaseActivity {
         {
             //得到广播中得到的数据，并显示出来
             final String msg = intent.getStringExtra("Msg");
-            Log.e("Test", "NewMsg");
             if(msg.equals("NewMsg"))
             {
             	mHandler.post(new Runnable() {  
@@ -79,7 +78,6 @@ public class HomeActivity extends BaseActivity {
 	{
 		ImageView pic=new ImageView(HomeActivity.this);
 		pic.setImageResource(R.drawable.ic_launcher);
-		Log.e("Test", " addChatIntoView: " + chatModel.getChatType() + " : ContactPersonName :" + chatModel.getContactPersonName() + ":GroupName:" + chatModel.getGroupName());
 		TextView name=new TextView(HomeActivity.this);
 		if(chatModel.getChatType()==1)
 		{
@@ -104,8 +102,10 @@ public class HomeActivity extends BaseActivity {
 		line.addView(content);
 
 		TextView contentTime=new TextView(HomeActivity.this);
-		contentTime.setText(String.copyValueOf(chatModel.getLatestTime().toCharArray(), 0, CommonVariables.getDateFormat2().length()));
-		
+		if(!chatModel.getLatestTime().isEmpty()&&chatModel.getLatestTime().length()>0)
+		{
+			contentTime.setText(String.copyValueOf(chatModel.getLatestTime().toCharArray(), 0, CommonVariables.getDateFormat2().length()));
+		}
 		TextView unreadcount=new TextView(HomeActivity.this);
 		if(chatModel.getUnReadCount()>0)
 		{
@@ -152,7 +152,6 @@ public class HomeActivity extends BaseActivity {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		Log.e("Test", "onResume");
 		ArrayList<ChatModel> chatModels=CommonVariables.getChatOperate().GetChats(HomeActivity.this);
 		if(chatModels==null || chatModels.size()<1)
 		{
@@ -169,7 +168,6 @@ public class HomeActivity extends BaseActivity {
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		Log.e("Test", "unregisterReceiver HomeActivity");
 		if(receiveBroadCast!=null)
 		{
 			unregisterReceiver(receiveBroadCast);

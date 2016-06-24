@@ -66,7 +66,6 @@ public class ReciveMsgService extends Service {
 		super.onDestroy();
 		reciveMsgThread.setGoonRunning(false);
 		sendMsgThread.setGoonRunning(false);
-		Log.e("Test", "ReciveMsgService Destroyed");
 	}
 
 	public class LocalBinder extends Binder {
@@ -92,7 +91,6 @@ public class ReciveMsgService extends Service {
 		public void run() {
 			// TODO Auto-generated method stub
 
-			Log.e("Test", "Begin Get Mssage from MCS");
 			char[] charbuffer = new char[1024];
 			int charcount = 0;
 			Socket sockettoServer = null;
@@ -193,7 +191,6 @@ public class ReciveMsgService extends Service {
 					}
 				}
 			} catch (Exception ex) {
-				Log.e("Test", "Get Message failure:" + ex.getMessage());
 			}
 		}
 	}
@@ -213,7 +210,6 @@ public class ReciveMsgService extends Service {
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			Log.e("Test", "Begin Send Mssage Thread");
 			char[] charbuffer = new char[1024];
 			int charcount = 0;
 			Socket sockettoServer = null;
@@ -244,8 +240,6 @@ public class ReciveMsgService extends Service {
 												ReciveMsgService.this);
 
 								JSONObject msgobject = SetMSGBox(msgRecord);
-								
-								Log.e("Test", "send msg" + msgobject.toString());
 								ou.write((CommonFlag.getF_MCSVerifyUAMSG() + msgobject
 										.toString()).getBytes("UTF-8"));
 
@@ -285,7 +279,6 @@ public class ReciveMsgService extends Service {
 
 				}
 			} catch (Exception ex) {
-				Log.e("Test", "Send Message failure:" + ex.getMessage());
 			}
 		}
 

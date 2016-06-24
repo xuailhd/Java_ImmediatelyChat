@@ -32,7 +32,6 @@ public class PersonsActivity extends BaseActivity {
 		addperson=(TextView)findViewById(R.id.addperson);
 
 		addperson.setOnClickListener(new OnClickListener(){
-
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
@@ -42,19 +41,28 @@ public class PersonsActivity extends BaseActivity {
 			}
 			
 		});
-		
+	}
+	private void CleanViews()
+	{
+		mainLayout.removeAllViews();
+	}
+	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
 		ContactPersonList[] contactPersonLists= CommonVariables.getContactDataOperate().LoadContactPersonList(CommonVariables.getObjectID(), this);
 		if(contactPersonLists==null || contactPersonLists.length<1)
 		{
 			return;
 		}
+		CleanViews();
 		for(int i=0;i<contactPersonLists.length;i++)
 		{
 			addPersonIntoView(contactPersonLists[i]);
 		}
 	}
-	
-	
+
 	private void addPersonIntoView(final ContactPersonList contactPersonList)
 	{
 		ImageView pic=new ImageView(PersonsActivity.this);

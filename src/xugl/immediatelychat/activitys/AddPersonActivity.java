@@ -43,8 +43,6 @@ public class AddPersonActivity extends Activity  {
         	if(broadCastType.equals("Search"))
         	{
 	            String message = intent.getStringExtra("SearchResult");
-	            Log.e("Test", "get search message:" + message);
-	
 	            try {
 	            	if(!message.equals("No Result") && !message.equals("No Connect"))
 	                {
@@ -86,7 +84,6 @@ public class AddPersonActivity extends Activity  {
         	else if (broadCastType.equals("Add"))
         	{
         		int status=intent.getIntExtra("Status", -1);
-        		Log.e("Test", "get person add message:" + String.valueOf(status));
         		if(status==0)
         		{
         			finish();
@@ -108,6 +105,11 @@ public class AddPersonActivity extends Activity  {
 		setContentView(R.layout.activity_findcontact);
 	}
 
+	
+	private void CleanViews()
+	{
+		searchlayout.removeAllViews();
+	}
 
 	protected void init() {
 		// TODO Auto-generated method stub
@@ -122,6 +124,7 @@ public class AddPersonActivity extends Activity  {
 					// TODO Auto-generated method stub
 					String key=searchinput.getText().toString();
 					CommonVariables.getSendMsg().sendSearchRequest(key, 1, AddPersonActivity.this);
+					CleanViews();
 					search.setEnabled(false);
 				}
 			}

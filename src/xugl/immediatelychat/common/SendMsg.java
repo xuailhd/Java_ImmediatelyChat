@@ -157,7 +157,6 @@ public class SendMsg implements ISendMsg {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				Log.e("Test", "begin send add person result:");
 				int RetryCount = 3;
 				Intent intent = new Intent();
 				intent.setAction("SearchPerson");
@@ -239,7 +238,6 @@ public class SendMsg implements ISendMsg {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				Log.e("Test", "begin send add group result:");
 				int RetryCount = 3;
 				Intent intent = new Intent();
 				intent.setAction("SearchGroup");
@@ -280,8 +278,6 @@ public class SendMsg implements ISendMsg {
 						if (charcount > 0) {
 							retrunStr = String
 									.valueOf(charbuffer, 0, charcount);
-							Log.e("Test", retrunStr);
-							
 							jsonObject = new JSONObject(retrunStr);
 							CommonVariables.getContactDataOperate()
 									.SaveContactData(

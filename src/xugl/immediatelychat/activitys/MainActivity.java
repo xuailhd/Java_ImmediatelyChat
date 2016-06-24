@@ -61,7 +61,6 @@ public class MainActivity extends Activity {
         	
             //得到广播中得到的数据，并显示出来
             final String message = intent.getStringExtra("MSG");
-            Log.e("Test", "get message:" + message);
             
             try {
 				msgjson=new JSONObject(message);

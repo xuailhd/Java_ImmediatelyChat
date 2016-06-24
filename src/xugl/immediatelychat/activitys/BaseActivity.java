@@ -20,7 +20,6 @@ public abstract class BaseActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		CommonVariables.setBaseActivityCount(CommonVariables.getBaseActivityCount() + 1);
-		Log.e("Test","Add BaseActivityCount");
 		super.onCreate(savedInstanceState);
 		setView();
 		initBottom();
@@ -36,11 +35,9 @@ public abstract class BaseActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		CommonVariables.setBaseActivityCount(CommonVariables.getBaseActivityCount() - 1);
-		Log.e("Test","Delete BaseActivityCount");
 		if(CommonVariables.getBaseActivityCount()==0)
 		{
 			stopService(new Intent(BaseActivity.this,ReciveMsgService.class));
-			Log.e("Test", "Can stop service now!");
 		}
 	}
 	

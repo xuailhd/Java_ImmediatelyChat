@@ -322,7 +322,6 @@ public class ChatOperate implements IChatOperate {
 					jsonObject.put("GroupID", destinationObjectID);
 					jsonObject.put("GroupName", destinationName);
 				}
-				Log.e("Test", "new Chat:" + jsonObject.getString("ChatID"));
 				jsonArray.put(jsonObject);
 				CommonVariables.getLocalDataManager().SaveData(CommonVariables.getObjectID(),"ChatModels", jsonArray.toString(), packageContext);
 			}
@@ -333,7 +332,6 @@ public class ChatOperate implements IChatOperate {
 
 			chatModel = new ChatModel();
 			chatModel.setChatType(chatType);
-			Log.e("Test", "new chatModel:" + jsonObject.getString("ChatID"));
 			if(chatType == 1)
 			{
 				chatModel.setChatID(jsonObject.getString("ChatID"));
@@ -346,7 +344,6 @@ public class ChatOperate implements IChatOperate {
 				chatModel.setGroupID(destinationObjectID);
 				chatModel.setGroupName(destinationName);
 			}
-			Log.e("Test", "check chatModel:" + chatModel.getChatID());
 			if(jsonObject.has("LatestMsg"))
 			{
 				chatModel.setLatestMsg(jsonObject.getString("LatestMsg"));

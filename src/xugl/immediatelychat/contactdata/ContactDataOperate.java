@@ -317,7 +317,6 @@ public class ContactDataOperate implements IContactDataOperate {
 			
 			if(localDataStr==null)
 			{
-				Log.e("Test", "not contactPerson info");
 				jsonObject=new JSONObject();
 				jsonObject.put("UpdateTime", CommonVariables.getMinDate());
 				jsonObject.put("LatestTime", CommonVariables.getMinDate());
@@ -327,7 +326,6 @@ public class ContactDataOperate implements IContactDataOperate {
 			{
 				jsonObject=new JSONObject(localDataStr);
 			}
-			Log.e("Test","UpdateTime:" + jsonObject.getString("UpdateTime"));
 			CommonVariables.setUpdateTime(jsonObject.getString("UpdateTime"));
 			CommonVariables.setLatestTime(jsonObject.getString("LatestTime"));
 			
