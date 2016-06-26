@@ -1,4 +1,4 @@
-package xugl.immediatelychar.chat;
+package xugl.immediatelychat.chat;
 
 import java.util.ArrayList;
 

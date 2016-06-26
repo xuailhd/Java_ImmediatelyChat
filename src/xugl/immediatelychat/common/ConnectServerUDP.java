@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
@@ -18,7 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-public class ConnectServer implements IConnectServer {
+public class ConnectServerUDP implements IConnectServer {
 
 	private int ReTryPSCount = 1;
 	private int ReTryMMSCount = 3;
@@ -187,17 +190,6 @@ public class ConnectServer implements IConnectServer {
 
 	private boolean ConnectMMS(Context packageContext) {
 		try {
-			char[] charbuffer = new char[1024];
-			String tempStr;
-			int charcount;
-			Socket sockettoServer = new Socket();
-			sockettoServer.connect(
-					new InetSocketAddress(CommonVariables.getMMSIP(),
-							CommonVariables.getMMSPort()), 2000);
-
-			OutputStream ou = sockettoServer.getOutputStream();
-			InputStream in = sockettoServer.getInputStream();
-
 //			CommonVariables.getContactDataOperate().CleanPersonInfo(CommonVariables.getObjectID(),
 //			 packageContext);
 			CommonVariables.getContactDataOperate().InitContactPersonInfo(
@@ -211,16 +203,10 @@ public class ConnectServer implements IConnectServer {
 			jsonObject.put(CommonFlag.getF_UpdateTime(),
 					CommonVariables.getUpdateTime());
 			String msg = CommonFlag.getF_MMSVerifyUA() + jsonObject.toString();
-			ou.write(msg.getBytes("UTF-8"));
-			ou.flush();
 
-			BufferedReader bff = new BufferedReader(new InputStreamReader(in,
-					"UTF-8"));
+			msg = CommonVariables.getSocketManage().sendMsgWithReceive(CommonVariables.getMMSIP(), 
+					CommonVariables.getMMSPort(), msg);
 
-			charcount = bff.read(charbuffer);
-			// 获取客户端的信息
-			msg = String.valueOf(charbuffer, 0, charcount);
-			jsonObject = null;
 			jsonObject = new JSONObject(msg);
 			CommonVariables.setMCSIP(jsonObject.getString("MCS_IP"));
 			CommonVariables.setMCSPort(jsonObject.getInt("MCS_Port"));
@@ -235,28 +221,22 @@ public class ConnectServer implements IConnectServer {
 						CommonVariables.getUpdateTime());
 				msg = CommonFlag.getF_MMSVerifyUAGetUAInfo()
 						+ jsonObject.toString();
-				ou.write(msg.getBytes("UTF-8"));
-				ou.flush();
-				charcount = bff.read(charbuffer);
-				while (charcount > 0) {
-					msg = String.valueOf(charbuffer, 0, charcount);
+				
+				msg = CommonVariables.getSocketManage().sendMsgWithReceive(CommonVariables.getMMSIP(), 
+					CommonVariables.getMMSPort(), msg);
+
+				while (msg!=null) {
 					jsonObject = new JSONObject(msg);
-					tempStr = CommonFlag.getF_MMSVerifyFBUAGetUAInfo()
+					msg = CommonFlag.getF_MMSVerifyFBUAGetUAInfo()
 							+ CommonVariables.getContactDataOperate()
 									.SaveContactData(
 											CommonVariables.getObjectID(),
 											jsonObject, packageContext);
-					ou.write(tempStr.getBytes("UTF-8"));
-					ou.flush();
-					charcount = bff.read(charbuffer);
-					
-					
+					msg = CommonVariables.getSocketManage().sendMsgWithReceive(CommonVariables.getMMSIP(), 
+							CommonVariables.getMMSPort(), msg);
 				}
 			}
 			jsonObject = null;
-			ou.close();
-			in.close();
-			sockettoServer.close();
 			return true;
 		} catch (Exception ex) {
 		}
@@ -265,18 +245,6 @@ public class ConnectServer implements IConnectServer {
 
 	private boolean ConnectMCS(Context packageContext) {
 		try {
-			char[] charbuffer = new char[1024];
-			int charcount;
-			Socket serivceSocket = new Socket();
-			serivceSocket.connect(
-					new InetSocketAddress(CommonVariables.getMCSIP(),
-							CommonVariables.getMCSPort()), 2000);
-
-			OutputStream ou = serivceSocket.getOutputStream();
-			InputStream in = serivceSocket.getInputStream();
-			BufferedReader bff = new BufferedReader(new InputStreamReader(in,
-					"UTF-8"));
-
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put(CommonFlag.getF_ObjectID(),
 					CommonVariables.getObjectID());
@@ -284,22 +252,17 @@ public class ConnectServer implements IConnectServer {
 					CommonVariables.getUpdateTime());
 			jsonObject.put(CommonFlag.getF_LatestTime(), CommonVariables.getLatestTime());
 			String msg = CommonFlag.getF_MCSVerifyUA() + jsonObject.toString();
-
-			String mcsRereturn = null;
-
-			ou.write(msg.getBytes("UTF-8"));
-			ou.flush();
-			charcount = bff.read(charbuffer);
-			mcsRereturn = String.valueOf(charbuffer, 0, charcount);
-			if (mcsRereturn.equalsIgnoreCase("ok")) {
+			
+			msg = CommonVariables.getSocketManage().sendMsgWithReceive(CommonVariables.getMCSIP(),
+					CommonVariables.getMCSPort(), msg);
+			
+			if (msg.equalsIgnoreCase("ok")) {
 				Intent intent = new Intent(); // Itent就是我们要发送的内容
 				intent.putExtra("MSG", "Success");
 				intent.setAction("LoginActivity"); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
 				packageContext.sendBroadcast(intent); // 发送广播
-				serivceSocket.close();
 				return true;
 			} 
-			serivceSocket.close();
 		} catch (Exception ex) {
 		}
 

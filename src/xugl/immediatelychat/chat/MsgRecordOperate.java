@@ -1,4 +1,4 @@
-package xugl.immediatelychar.chat;
+package xugl.immediatelychat.chat;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -61,7 +61,6 @@ public class MsgRecordOperate implements IMsgRecordOperate {
 			        {
 			        	msgRecord.setChatID(jsonObject.getString("ChatID"));
 			        }
-			        else
 			        
 			        if(jsonObject.has("IsSend"))
 			        {
@@ -71,6 +70,8 @@ public class MsgRecordOperate implements IMsgRecordOperate {
 			        {
 			        	msgRecord.setIsSend(1);
 			        }
+			        
+		        	
 			        msgRecords.add(msgRecord);
 			    }
 			}

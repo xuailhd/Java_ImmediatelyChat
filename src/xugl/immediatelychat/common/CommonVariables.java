@@ -2,16 +2,15 @@ package xugl.immediatelychat.common;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-
-import org.json.JSONArray;
-
-import xugl.immediatelychar.chat.ChatOperate;
-import xugl.immediatelychar.chat.IChatOperate;
-import xugl.immediatelychar.chat.IMsgRecordOperate;
-import xugl.immediatelychar.chat.MsgRecordOperate;
+import xugl.immediatelychat.chat.ChatOperate;
+import xugl.immediatelychat.chat.IChatOperate;
+import xugl.immediatelychat.chat.IMsgRecordOperate;
+import xugl.immediatelychat.chat.MsgRecordOperate;
 import xugl.immediatelychat.contactdata.ContactDataOperate;
 import xugl.immediatelychat.contactdata.IContactDataOperate;
 import xugl.immediatelychat.models.MsgRecord;
+import xugl.immediatelychat.socket.ISocketManage;
+import xugl.immediatelychat.socket.SocketManage;
 
 public class CommonVariables {
 	private static int baseActivityCount = 0;
@@ -91,13 +90,21 @@ public class CommonVariables {
 	}
 	
 	private static IMsgRecordOperate msgRecordOperate;
-	
 	public static IMsgRecordOperate getMsgRecordOperate() {
 		if(msgRecordOperate==null)
 		{
 			msgRecordOperate=new MsgRecordOperate();
 		}
 		return msgRecordOperate;
+	}
+	
+	private static ISocketManage socketManage;
+	public static ISocketManage getSocketManage() {
+		if(socketManage==null)
+		{
+			socketManage = new SocketManage();
+		}
+		return socketManage;
 	}
 
 	private static String PSIP;

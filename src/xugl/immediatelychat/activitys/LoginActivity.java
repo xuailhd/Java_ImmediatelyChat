@@ -3,6 +3,7 @@ package xugl.immediatelychat.activitys;
 import xugl.immediatelychat.R;
 import xugl.immediatelychat.common.CommonVariables;
 import xugl.immediatelychat.common.ConnectServer;
+import xugl.immediatelychat.common.ConnectServerUDP;
 import xugl.immediatelychat.common.IConnectServer;
 import xugl.immediatelychat.services.ReciveMsgService;
 import android.content.BroadcastReceiver;
@@ -23,7 +24,7 @@ public class LoginActivity extends Activity {
 	private Button login;
 	private Button cancel;
 	private EditText serverIP;
-	private EditText serverPort;
+//	private EditText serverPort;
 	private EditText account;
 	private EditText password;
 	private TextView errorMsg;
@@ -87,7 +88,7 @@ public class LoginActivity extends Activity {
 		login=(Button)findViewById(R.id.login);
 		cancel=(Button)findViewById(R.id.cancel);
 		serverIP=(EditText)findViewById(R.id.serverip);
-		serverPort=(EditText)findViewById(R.id.port);
+//		serverPort=(EditText)findViewById(R.id.port);
 		account=(EditText)findViewById(R.id.account);
 		password=(EditText)findViewById(R.id.password);
 		errorMsg=(TextView)findViewById(R.id.errorMsg);
@@ -95,7 +96,7 @@ public class LoginActivity extends Activity {
 		//读取本地配置文件
 		SharedPreferences settings = getSharedPreferences("PSConfig", Activity.MODE_PRIVATE);  
 		serverIP.setText(settings.getString("PSIP", ""));
-		serverPort.setText(settings.getString("PSPort", ""));
+//		serverPort.setText(settings.getString("PSPort", ""));
 		account.setText(settings.getString("Account", ""));
 		password.setText(settings.getString("Password", ""));
 		
@@ -105,19 +106,21 @@ public class LoginActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				
-				IConnectServer connectServer=new ConnectServer();
+				IConnectServer connectServer=new ConnectServerUDP();
 				
 				//存储本地配置文件
 				SharedPreferences settings = getSharedPreferences("PSConfig", Activity.MODE_PRIVATE);  
 				SharedPreferences.Editor editor = settings.edit();  
 				editor.putString("PSIP", serverIP.getText().toString()); 
-				editor.putString("PSPort", serverPort.getText().toString()); 
+//				editor.putString("PSPort", serverPort.getText().toString()); 
+				editor.putString("PSPort", "9000"); 
 				editor.putString("Account", account.getText().toString()); 
 				editor.putString("Password", password.getText().toString()); 
 				editor.commit();  
 				
 				CommonVariables.setPSIP(serverIP.getText().toString());
-				CommonVariables.setPSPort(Integer.parseInt(serverPort.getText().toString()) );
+//				CommonVariables.setPSPort(Integer.parseInt(serverPort.getText().toString()) );
+				CommonVariables.setPSPort(9000);
 				connectServer.postAccount(account.getText().toString(),password.getText().toString(),LoginActivity.this);
 				
 				errorMsg.setText(R.string.conneting);

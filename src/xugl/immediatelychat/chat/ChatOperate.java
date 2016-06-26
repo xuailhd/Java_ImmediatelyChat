@@ -1,4 +1,4 @@
-package xugl.immediatelychar.chat;
+package xugl.immediatelychat.chat;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -51,7 +51,7 @@ public class ChatOperate implements IChatOperate {
 						chatModel.setGroupID(jsonObject.getString("GroupID"));
 						chatModel.setGroupName(jsonObject.getString("GroupName"));
 					}
-					if(!jsonObject.isNull("LatestMsg"))
+					if(jsonObject.has("LatestMsg"))
 					{
 						chatModel.setLatestMsg(jsonObject.getString("LatestMsg"));
 					}
@@ -59,7 +59,7 @@ public class ChatOperate implements IChatOperate {
 					{
 						chatModel.setLatestMsg("");
 					}
-					if(!jsonObject.isNull("LatestTime"))
+					if(jsonObject.has("LatestTime"))
 					{
 						chatModel.setLatestTime(jsonObject.getString("LatestTime"));
 					}
