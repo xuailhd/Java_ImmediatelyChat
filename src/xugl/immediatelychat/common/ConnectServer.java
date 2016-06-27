@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import xugl.immediatelychat.services.ReciveMsgService;
 
 public class ConnectServer implements IConnectServer {
 
@@ -225,7 +226,18 @@ public class ConnectServer implements IConnectServer {
 			CommonVariables.setMCSIP(jsonObject.getString("MCS_IP"));
 			CommonVariables.setMCSPort(jsonObject.getInt("MCS_Port"));
 
-			String mmsUpdateTime = jsonObject.getString("UpdateTime");
+			String mmsUpdateTime = jsonObject.getString(CommonFlag.getF_UpdateTime());
+			
+			if(CommonVariables.getLatestTime().compareTo(jsonObject.getString(CommonFlag.getF_LatestTime()))<0)
+			{
+				CommonVariables.getContactDataOperate()
+					.UpdateLatestTime(
+						CommonVariables.getObjectID(),
+						jsonObject.getString(CommonFlag
+								.getF_LatestTime()),packageContext);
+				CommonVariables.setLatestTime(jsonObject.getString(CommonFlag.getF_LatestTime()));
+			}
+
 
 			if (mmsUpdateTime.compareTo(CommonVariables.getUpdateTime()) > 0) {
 				jsonObject = new JSONObject();
@@ -249,8 +261,6 @@ public class ConnectServer implements IConnectServer {
 					ou.write(tempStr.getBytes("UTF-8"));
 					ou.flush();
 					charcount = bff.read(charbuffer);
-					
-					
 				}
 			}
 			jsonObject = null;

@@ -106,7 +106,7 @@ public class LoginActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				
-				IConnectServer connectServer=new ConnectServerUDP();
+				IConnectServer connectServer=new ConnectServer();
 				
 				//存储本地配置文件
 				SharedPreferences settings = getSharedPreferences("PSConfig", Activity.MODE_PRIVATE);  

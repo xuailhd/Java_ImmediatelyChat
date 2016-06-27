@@ -7,26 +7,31 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Random;
 
 import android.util.Log;
 
 public class SocketManage implements ISocketManage {
 	byte[] buffer = new byte[1024];
+	
+	private int port =0;
+	private DatagramSocket ds = null;
+	public SocketManage()
+	{
+	}
+	
 	@Override
 	public String sendMsgWithReceive(String ip, int port, String msg) {
 		// TODO Auto-generated method stub
-		DatagramSocket ds;
 		String info = null;
 		try {
-			ds = new DatagramSocket();
 			byte[] tempbuffer = null;
 			tempbuffer = msg.getBytes("UTF-8");
 			DatagramPacket dp;
-			Log.e("Test", "ip:" + ip);
 			dp = new DatagramPacket(tempbuffer, tempbuffer.length, 
 				InetAddress.getByName(ip), port);
 			ds.send(dp);
-			ds.setSoTimeout(2000);
+			ds.setSoTimeout(5000);
 			dp = new DatagramPacket(buffer, buffer.length);
 			try
 			{
@@ -36,7 +41,7 @@ public class SocketManage implements ISocketManage {
 				return info;
 			}catch (IOException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+//				e.printStackTrace();
 			}
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
@@ -57,9 +62,7 @@ public class SocketManage implements ISocketManage {
 	@Override
 	public void sendMsg(String ip, int port, String msg) {
 		// TODO Auto-generated method stub
-		DatagramSocket ds;
 		try {
-			ds = new DatagramSocket();
 			byte[] tempbuffer = null;
 			tempbuffer = msg.getBytes("UTF-8");
 			DatagramPacket dp;

@@ -207,6 +207,8 @@ public class ConnectServerUDP implements IConnectServer {
 			msg = CommonVariables.getSocketManage().sendMsgWithReceive(CommonVariables.getMMSIP(), 
 					CommonVariables.getMMSPort(), msg);
 
+			Log.e("Test", "ConnectMMS :"+ msg);
+			
 			jsonObject = new JSONObject(msg);
 			CommonVariables.setMCSIP(jsonObject.getString("MCS_IP"));
 			CommonVariables.setMCSPort(jsonObject.getInt("MCS_Port"));
@@ -239,6 +241,7 @@ public class ConnectServerUDP implements IConnectServer {
 			jsonObject = null;
 			return true;
 		} catch (Exception ex) {
+			Log.e("Test", "ConnectMMS error:"+ ex.getMessage());
 		}
 		return false;
 	}

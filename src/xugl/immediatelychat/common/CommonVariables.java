@@ -1,7 +1,11 @@
 package xugl.immediatelychat.common;
 
+import java.net.DatagramSocket;
+import java.net.SocketException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Random;
+
 import xugl.immediatelychat.chat.ChatOperate;
 import xugl.immediatelychat.chat.IChatOperate;
 import xugl.immediatelychat.chat.IMsgRecordOperate;
@@ -204,13 +208,55 @@ public class CommonVariables {
 	}
 	
 	private static ArrayList<MsgRecord> msgRecordBuffer;
-
 	public static ArrayList<MsgRecord> getMsgRecordBuffer() {
 		if(msgRecordBuffer==null)
 		{
 			msgRecordBuffer = new ArrayList<MsgRecord>();
 		}
 		return msgRecordBuffer;
+	}
+
+	private static ArrayList<String> toMCSMsgBuffer;
+	private static ArrayList<String> toMMSMsgBuffer;
+
+	public static ArrayList<String> getToMCSMsgBuffer() {
+		if(toMCSMsgBuffer==null)
+		{
+			toMCSMsgBuffer = new ArrayList<String>();
+		}
+		return toMCSMsgBuffer;
+	}
+	public static ArrayList<String> getToMMSMsgBuffer() {
+		if(toMMSMsgBuffer==null)
+		{
+			toMMSMsgBuffer = new ArrayList<String>();
+		}
+		return toMMSMsgBuffer;
+	}
+
+	private static int port =0;
+	private static DatagramSocket datagramSocket;
+
+	public static DatagramSocket getDatagramSocket() {
+		if(datagramSocket==null)
+		{
+			BindPort();
+		}
+		return datagramSocket;
+	}
+	
+	
+	private static void BindPort()
+	{
+		Random random = new Random();
+		port = random.nextInt(65535);
+		
+		try {
+			datagramSocket = new DatagramSocket(port);
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			BindPort();
+		}
 	}
 	
 }

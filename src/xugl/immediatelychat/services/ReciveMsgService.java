@@ -48,12 +48,6 @@ public class ReciveMsgService extends Service {
 
 	}
 
-	// public void GetMSG()
-	// {
-	// ReciveMsgThread reciveMsgThread=new ReciveMsgThread();
-	// reciveMsgThread.start();
-	// }
-
 	@Override
 	public void onCreate() {
 		// TODO Auto-generated method stub
@@ -86,7 +80,7 @@ public class ReciveMsgService extends Service {
 		public ReciveMsgThread() {
 			isGoonRunning = true;
 		}
-
+		
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
@@ -101,11 +95,9 @@ public class ReciveMsgService extends Service {
 			ChatModel chatModel = null;
 			MsgRecord msgRecord = null;
 			Intent intent = null;
-			int i = 0;
 			try {
 				while (isGoonRunning) {
 					try {
-						i++;
 						sockettoServer = new Socket();
 						sockettoServer.connect(
 								new InetSocketAddress(CommonVariables
@@ -193,6 +185,78 @@ public class ReciveMsgService extends Service {
 			} catch (Exception ex) {
 			}
 		}
+		
+//		public void run() {
+//			JSONObject jsonObject = null;
+//			ChatModel chatModel = null;
+//			MsgRecord msgRecord = null;
+//			Intent intent = null;
+//			try {
+//				while (isGoonRunning) {
+//					jsonObject = new JSONObject();
+//					jsonObject.put(CommonFlag.getF_ObjectID(),
+//							CommonVariables.getObjectID());
+//					jsonObject.put(CommonFlag.getF_LatestTime(),
+//							CommonVariables.getLatestTime());
+//					String msg = CommonFlag.getF_MCSVerifyUAGetMSG()
+//							+ jsonObject.toString();
+//
+//					msg = CommonVariables.getSocketManage().sendMsgWithReceive(CommonVariables.getMCSIP(), CommonVariables.getMCSPort(), 
+//							msg);
+//					while (msg!=null && msg.length()>0) {
+//						msgRecord = null;
+//						jsonObject = new JSONObject(msg);
+//
+//						chatModel = CommonVariables.getChatOperate()
+//								.GetChat(jsonObject, ReciveMsgService.this);
+//
+//						msgRecord = CommonVariables.getMsgRecordOperate()
+//								.SaveMsgRecord(jsonObject,
+//										chatModel.getChatID(),
+//										ReciveMsgService.this);
+//
+//						if (msgRecord == null) {
+//							break;
+//						}
+//
+//						if (jsonObject
+//								.getString(CommonFlag.getF_SendTime())
+//								.compareTo(CommonVariables.getLatestTime()) > 0) {
+//							CommonVariables.setLatestTime(jsonObject
+//									.getString(CommonFlag.getF_SendTime()));
+//							CommonVariables.getContactDataOperate()
+//									.UpdateLatestTime(
+//											CommonVariables.getObjectID(),
+//											jsonObject.getString(CommonFlag
+//													.getF_SendTime()),
+//											ReciveMsgService.this);
+//						}
+//
+//						// 通知 chatActivity
+//						intent = new Intent();
+//						intent.putExtra("MsgRecord", msgRecord);
+//						intent.setAction(chatModel.getChatID()); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
+//						sendBroadcast(intent); // 发送广播
+//
+//						msg = CommonFlag.getF_MCSReciveUAMSGFB()
+//								+ msgRecord.getMsgID();
+//						msg = CommonVariables.getSocketManage().sendMsgWithReceive(CommonVariables.getMCSIP(), CommonVariables.getMCSPort(), 
+//								msg);
+//					}
+//					if (msgRecord != null) {
+//						// 通知HomeActivity
+//						intent = new Intent();
+//						intent.putExtra("Msg", "NewMsg");
+//						intent.setAction(CommonVariables.getObjectID()
+//								+ "Home"); // 设置你这个广播的action，只有和这个action一样的接受者才能接受者才能接收广播
+//						sendBroadcast(intent); // 发送广播
+//						msgRecord = null;
+//					}
+//					Thread.sleep(500);
+//				}
+//			} catch (Exception ex) {
+//			}
+//		}
 	}
 
 	public class SendMsgThread extends Thread {
@@ -206,7 +270,6 @@ public class ReciveMsgService extends Service {
 		public SendMsgThread() {
 			isGoonRunning = true;
 		}
-
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
@@ -281,6 +344,50 @@ public class ReciveMsgService extends Service {
 			} catch (Exception ex) {
 			}
 		}
+		
+//		public void run() {
+//			// TODO Auto-generated method stub
+//			MsgRecord msgRecord = null;
+//			Intent intent = null;
+//			int i = 0;
+//			try {
+//				while (isGoonRunning) {
+//					if (CommonVariables.getMsgRecordBuffer().size() > 0) {
+//						while (CommonVariables.getMsgRecordBuffer().size() > 0) {
+//							msgRecord = CommonVariables
+//									.getMsgRecordBuffer().get(i);
+//
+//							JSONObject msgobject = SetMSGBox(msgRecord);
+//							
+//							String msg = CommonFlag.getF_MCSVerifyUAMSG() + msgobject
+//									.toString();
+//							msg = CommonVariables.getSocketManage().sendMsgWithReceive(CommonVariables.getMCSIP(),
+//									CommonVariables.getMCSPort(), msg);
+//
+//							if (msg!=null &&  msg.length()>0) {
+//								if (msgRecord.getMsgID().equalsIgnoreCase(msg)) {
+//									CommonVariables.getMsgRecordOperate()
+//											.UpdateIsSend(
+//													msgRecord.getMsgID(),
+//													msgRecord.getChatID(),
+//													ReciveMsgService.this);
+//
+//									CommonVariables.getMsgRecordBuffer()
+//											.remove(i);
+//									intent = new Intent();
+//									intent.putExtra("FinishSend",
+//											msgRecord.getMsgID());
+//									intent.setAction(msgRecord.getChatID());
+//									sendBroadcast(intent); // 发送广播
+//								}
+//							}
+//						}
+//					}
+//					Thread.sleep(100);
+//				}
+//			} catch (Exception ex) {
+//			}
+//		}
 
 		private JSONObject SetMSGBox(MsgRecord msgRecord) {
 			JSONObject msgObject = new JSONObject();
